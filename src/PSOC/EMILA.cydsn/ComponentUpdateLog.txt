@@ -1,0 +1,8 @@
+Last Modified Date & Time: 12/10/2019 06:36:17
+
+UART_Full_Duplex01: UART_Full_Duplex01.cydwr
+	cy_boot [v5.60] to [v5.80]
+	Em_EEPROM_Dynamic [v2.0] to [v2.20]
+	LIN_Dynamic [v4.0] to [v5.0]
+
+

@@ -1,0 +1,2407 @@
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.SAMPLE_ISR,"ax",%progbits
+  20              		.align	2
+  21              		.global	SAMPLE_ISR
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	SAMPLE_ISR, %function
+  25              	SAMPLE_ISR:
+  26              	.LFB64:
+  27              		.file 1 "main.c"
+   1:main.c        **** #include <project.h>
+   2:main.c        **** #include "stdio.h"
+   3:main.c        **** #include <string.h>
+   4:main.c        **** #include <stdlib.h> //atoi
+   5:main.c        **** 
+   6:main.c        **** /* Project Defines */
+   7:main.c        **** #define FALSE  0
+   8:main.c        **** #define TRUE   1
+   9:main.c        **** #define TRANSMIT_BUFFER_SIZE  16
+  10:main.c        **** 
+  11:main.c        **** /* Flags used to store transmit data commands */
+  12:main.c        **** uint8 ContinuouslySendData = FALSE;
+  13:main.c        **** uint8 SendSingleByte = FALSE;
+  14:main.c        **** uint8 clenchGesture = FALSE;
+  15:main.c        **** uint8 neutralGesture = FALSE;
+  16:main.c        **** uint8 spideyGesture = FALSE;
+  17:main.c        **** uint8 sigGesture = FALSE;
+  18:main.c        **** uint ms_count = 0;
+  19:main.c        **** 
+  20:main.c        **** 
+  21:main.c        **** CY_ISR(SAMPLE_ISR){       
+  28              		.loc 1 21 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  22:main.c        ****     if(ContinuouslySendData == TRUE) { // 5 seconds
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 2
+
+
+  36              		.loc 1 22 0
+  37 0002 0B4B     		ldr	r3, .L4
+  38 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  39 0006 012B     		cmp	r3, #1
+  40 0008 11D1     		bne	.L1
+  23:main.c        ****         ms_count++;
+  41              		.loc 1 23 0
+  42 000a 094A     		ldr	r2, .L4
+  43 000c 5368     		ldr	r3, [r2, #4]
+  44 000e 0133     		adds	r3, r3, #1
+  45 0010 5360     		str	r3, [r2, #4]
+  24:main.c        ****         if (ms_count == 5000){
+  46              		.loc 1 24 0
+  47 0012 41F28832 		movw	r2, #5000
+  48 0016 9342     		cmp	r3, r2
+  49 0018 09D1     		bne	.L1
+  25:main.c        ****         ContinuouslySendData = FALSE;
+  50              		.loc 1 25 0
+  51 001a 054B     		ldr	r3, .L4
+  52 001c 0022     		movs	r2, #0
+  53 001e 1A70     		strb	r2, [r3]
+  26:main.c        ****         ms_count = 0; // reset ms counter
+  54              		.loc 1 26 0
+  55 0020 5A60     		str	r2, [r3, #4]
+  27:main.c        ****         CyDelay(100);
+  56              		.loc 1 27 0
+  57 0022 6420     		movs	r0, #100
+  58 0024 FFF7FEFF 		bl	CyDelay
+  59              	.LVL0:
+  28:main.c        ****         UART_1_PutString("INTERRUPT\r\n");
+  60              		.loc 1 28 0
+  61 0028 0248     		ldr	r0, .L4+4
+  62 002a FFF7FEFF 		bl	UART_1_PutString
+  63              	.LVL1:
+  64              	.L1:
+  65 002e 08BD     		pop	{r3, pc}
+  66              	.L5:
+  67              		.align	2
+  68              	.L4:
+  69 0030 00000000 		.word	.LANCHOR0
+  70 0034 00000000 		.word	.LC0
+  71              		.cfi_endproc
+  72              	.LFE64:
+  73              		.size	SAMPLE_ISR, .-SAMPLE_ISR
+  74              		.section	.text.VERIFY_ISR,"ax",%progbits
+  75              		.align	2
+  76              		.global	VERIFY_ISR
+  77              		.thumb
+  78              		.thumb_func
+  79              		.type	VERIFY_ISR, %function
+  80              	VERIFY_ISR:
+  81              	.LFB65:
+  29:main.c        ****         }
+  30:main.c        ****     }
+  31:main.c        **** }
+  32:main.c        **** 
+  33:main.c        **** CY_ISR(VERIFY_ISR){ 
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 3
+
+
+  82              		.loc 1 33 0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86 0000 08B5     		push	{r3, lr}
+  87              		.cfi_def_cfa_offset 8
+  88              		.cfi_offset 3, -8
+  89              		.cfi_offset 14, -4
+  90              	.LVL2:
+  34:main.c        ****     
+  35:main.c        ****     uint8 userInput = '\0';
+  36:main.c        ****     
+  37:main.c        ****     if (sigGesture == TRUE){
+  91              		.loc 1 37 0
+  92 0002 1C4B     		ldr	r3, .L16
+  93 0004 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+  94 0006 012B     		cmp	r3, #1
+  95 0008 33D1     		bne	.L6
+  38:main.c        ****         UART_1_PutString("HITL VERIFY\r\n");
+  96              		.loc 1 38 0
+  97 000a 1B48     		ldr	r0, .L16+4
+  98 000c FFF7FEFF 		bl	UART_1_PutString
+  99              	.LVL3:
+  35:main.c        ****     
+ 100              		.loc 1 35 0
+ 101 0010 0020     		movs	r0, #0
+  39:main.c        ****         while (userInput == '\0'){
+ 102              		.loc 1 39 0
+ 103 0012 29E0     		b	.L8
+ 104              	.LVL4:
+ 105              	.L14:
+  40:main.c        ****             userInput = UART_1_GetChar();
+ 106              		.loc 1 40 0
+ 107 0014 FFF7FEFF 		bl	UART_1_GetChar
+ 108              	.LVL5:
+  41:main.c        ****             
+  42:main.c        ****             switch(userInput)
+ 109              		.loc 1 42 0
+ 110 0018 A0F14103 		sub	r3, r0, #65
+ 111 001c 2D2B     		cmp	r3, #45
+ 112 001e 23D8     		bhi	.L8
+ 113 0020 DFE803F0 		tbb	[pc, r3]
+ 114              	.L11:
+ 115 0024 17       		.byte	(.L10-.L11)/2
+ 116 0025 1B       		.byte	(.L12-.L11)/2
+ 117 0026 22       		.byte	(.L8-.L11)/2
+ 118 0027 22       		.byte	(.L8-.L11)/2
+ 119 0028 22       		.byte	(.L8-.L11)/2
+ 120 0029 22       		.byte	(.L8-.L11)/2
+ 121 002a 22       		.byte	(.L8-.L11)/2
+ 122 002b 22       		.byte	(.L8-.L11)/2
+ 123 002c 22       		.byte	(.L8-.L11)/2
+ 124 002d 22       		.byte	(.L8-.L11)/2
+ 125 002e 22       		.byte	(.L8-.L11)/2
+ 126 002f 22       		.byte	(.L8-.L11)/2
+ 127 0030 22       		.byte	(.L8-.L11)/2
+ 128 0031 1F       		.byte	(.L13-.L11)/2
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 4
+
+
+ 129 0032 22       		.byte	(.L8-.L11)/2
+ 130 0033 22       		.byte	(.L8-.L11)/2
+ 131 0034 22       		.byte	(.L8-.L11)/2
+ 132 0035 22       		.byte	(.L8-.L11)/2
+ 133 0036 22       		.byte	(.L8-.L11)/2
+ 134 0037 22       		.byte	(.L8-.L11)/2
+ 135 0038 22       		.byte	(.L8-.L11)/2
+ 136 0039 22       		.byte	(.L8-.L11)/2
+ 137 003a 22       		.byte	(.L8-.L11)/2
+ 138 003b 22       		.byte	(.L8-.L11)/2
+ 139 003c 22       		.byte	(.L8-.L11)/2
+ 140 003d 22       		.byte	(.L8-.L11)/2
+ 141 003e 22       		.byte	(.L8-.L11)/2
+ 142 003f 22       		.byte	(.L8-.L11)/2
+ 143 0040 22       		.byte	(.L8-.L11)/2
+ 144 0041 22       		.byte	(.L8-.L11)/2
+ 145 0042 22       		.byte	(.L8-.L11)/2
+ 146 0043 22       		.byte	(.L8-.L11)/2
+ 147 0044 17       		.byte	(.L10-.L11)/2
+ 148 0045 1B       		.byte	(.L12-.L11)/2
+ 149 0046 22       		.byte	(.L8-.L11)/2
+ 150 0047 22       		.byte	(.L8-.L11)/2
+ 151 0048 22       		.byte	(.L8-.L11)/2
+ 152 0049 22       		.byte	(.L8-.L11)/2
+ 153 004a 22       		.byte	(.L8-.L11)/2
+ 154 004b 22       		.byte	(.L8-.L11)/2
+ 155 004c 22       		.byte	(.L8-.L11)/2
+ 156 004d 22       		.byte	(.L8-.L11)/2
+ 157 004e 22       		.byte	(.L8-.L11)/2
+ 158 004f 22       		.byte	(.L8-.L11)/2
+ 159 0050 22       		.byte	(.L8-.L11)/2
+ 160 0051 1F       		.byte	(.L13-.L11)/2
+ 161              		.p2align 1
+ 162              	.L10:
+  43:main.c        ****             {
+  44:main.c        ****                 case 0:
+  45:main.c        ****                     /* No new data was recieved */
+  46:main.c        ****                     break;
+  47:main.c        ****                 case 'A':
+  48:main.c        ****                 case 'a': //clench sequence
+  49:main.c        ****                     clenchGesture = TRUE;
+ 163              		.loc 1 49 0
+ 164 0052 0122     		movs	r2, #1
+ 165 0054 074B     		ldr	r3, .L16
+ 166 0056 5A72     		strb	r2, [r3, #9]
+  50:main.c        ****                     break;
+ 167              		.loc 1 50 0
+ 168 0058 06E0     		b	.L8
+ 169              	.L12:
+  51:main.c        ****                 case 'B': //spidey sequence
+  52:main.c        ****                 case 'b':
+  53:main.c        ****                     spideyGesture = TRUE;
+ 170              		.loc 1 53 0
+ 171 005a 0122     		movs	r2, #1
+ 172 005c 054B     		ldr	r3, .L16
+ 173 005e 9A72     		strb	r2, [r3, #10]
+  54:main.c        ****                     break;
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 5
+
+
+ 174              		.loc 1 54 0
+ 175 0060 02E0     		b	.L8
+ 176              	.L13:
+  55:main.c        ****                 case 'N': //neutral sequence
+  56:main.c        ****                 case 'n':
+  57:main.c        ****                     neutralGesture = TRUE;
+ 177              		.loc 1 57 0
+ 178 0062 0122     		movs	r2, #1
+ 179 0064 034B     		ldr	r3, .L16
+ 180 0066 DA72     		strb	r2, [r3, #11]
+ 181              	.LVL6:
+ 182              	.L8:
+  39:main.c        ****             userInput = UART_1_GetChar();
+ 183              		.loc 1 39 0
+ 184 0068 0028     		cmp	r0, #0
+ 185 006a D3D0     		beq	.L14
+  58:main.c        ****                     break;
+  59:main.c        ****                 default:
+  60:main.c        ****                     /* Place error handling code here */
+  61:main.c        ****                     break;    
+  62:main.c        ****             }
+  63:main.c        ****         }
+  64:main.c        ****         sigGesture = FALSE;
+ 186              		.loc 1 64 0
+ 187 006c 0022     		movs	r2, #0
+ 188 006e 014B     		ldr	r3, .L16
+ 189 0070 1A72     		strb	r2, [r3, #8]
+ 190              	.LVL7:
+ 191              	.L6:
+ 192 0072 08BD     		pop	{r3, pc}
+ 193              	.L17:
+ 194              		.align	2
+ 195              	.L16:
+ 196 0074 00000000 		.word	.LANCHOR0
+ 197 0078 0C000000 		.word	.LC1
+ 198              		.cfi_endproc
+ 199              	.LFE65:
+ 200              		.size	VERIFY_ISR, .-VERIFY_ISR
+ 201              		.section	.text.main,"ax",%progbits
+ 202              		.align	2
+ 203              		.global	main
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.type	main, %function
+ 207              	main:
+ 208              	.LFB66:
+  65:main.c        ****     }
+  66:main.c        **** }
+  67:main.c        **** 
+  68:main.c        **** 
+  69:main.c        **** int main()
+  70:main.c        **** {
+ 209              		.loc 1 70 0
+ 210              		.cfi_startproc
+ 211              		@ args = 0, pretend = 0, frame = 16
+ 212              		@ frame_needed = 0, uses_anonymous_args = 0
+ 213 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 6
+
+
+ 214              		.cfi_def_cfa_offset 8
+ 215              		.cfi_offset 4, -8
+ 216              		.cfi_offset 14, -4
+ 217 0002 84B0     		sub	sp, sp, #16
+ 218              		.cfi_def_cfa_offset 24
+  71:main.c        ****     /* Variable to store ADC result */
+  72:main.c        ****     uint32 Output;
+  73:main.c        ****     /* Variable to store UART received character */
+  74:main.c        ****     uint8 Ch;
+  75:main.c        **** 
+  76:main.c        ****     /* Transmit Buffer */
+  77:main.c        ****     char TransmitBuffer[TRANSMIT_BUFFER_SIZE];
+  78:main.c        ****     
+  79:main.c        ****     ADC_SAR_1_Start();
+ 219              		.loc 1 79 0
+ 220 0004 FFF7FEFF 		bl	ADC_SAR_1_Start
+ 221              	.LVL8:
+  80:main.c        ****     UART_1_Start();
+ 222              		.loc 1 80 0
+ 223 0008 FFF7FEFF 		bl	UART_1_Start
+ 224              	.LVL9:
+  81:main.c        ****     
+  82:main.c        ****     /* Start the ADC conversion */
+  83:main.c        ****     ADC_SAR_1_StartConvert();
+ 225              		.loc 1 83 0
+ 226 000c FFF7FEFF 		bl	ADC_SAR_1_StartConvert
+ 227              	.LVL10:
+  84:main.c        ****     
+  85:main.c        ****     /* Send message to verify COM port is connected properly */
+  86:main.c        ****     UART_1_PutString("COM Port Open");
+ 228              		.loc 1 86 0
+ 229 0010 6B48     		ldr	r0, .L34
+ 230 0012 FFF7FEFF 		bl	UART_1_PutString
+ 231              	.LVL11:
+  87:main.c        ****     
+  88:main.c        ****     PWM_1_Start(); //thumb
+ 232              		.loc 1 88 0
+ 233 0016 FFF7FEFF 		bl	PWM_1_Start
+ 234              	.LVL12:
+  89:main.c        ****     PWM_2_Start(); //index
+ 235              		.loc 1 89 0
+ 236 001a FFF7FEFF 		bl	PWM_2_Start
+ 237              	.LVL13:
+  90:main.c        ****     PWM_3_Start(); // middle
+ 238              		.loc 1 90 0
+ 239 001e FFF7FEFF 		bl	PWM_3_Start
+ 240              	.LVL14:
+  91:main.c        ****     PWM_4_Start(); //ring
+ 241              		.loc 1 91 0
+ 242 0022 FFF7FEFF 		bl	PWM_4_Start
+ 243              	.LVL15:
+  92:main.c        ****     PWM_5_Start(); //pinky
+ 244              		.loc 1 92 0
+ 245 0026 FFF7FEFF 		bl	PWM_5_Start
+ 246              	.LVL16:
+  93:main.c        ****     
+  94:main.c        ****     int clenchValL = 2200;
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 7
+
+
+  95:main.c        ****     int clenchValR = 1100;
+  96:main.c        ****     int neutralVal = 1600;
+  97:main.c        ****     
+  98:main.c        ****     CYGlobalIntEnable;
+ 247              		.loc 1 98 0
+ 248              		.syntax unified
+ 249              	@ 98 "main.c" 1
+ 250 002a 62B6     		CPSIE   i
+ 251              	@ 0 "" 2
+  99:main.c        ****     Timer_1_Start();
+ 252              		.loc 1 99 0
+ 253              		.thumb
+ 254              		.syntax unified
+ 255 002c FFF7FEFF 		bl	Timer_1_Start
+ 256              	.LVL17:
+ 100:main.c        ****     Timer_2_Start();
+ 257              		.loc 1 100 0
+ 258 0030 FFF7FEFF 		bl	Timer_2_Start
+ 259              	.LVL18:
+ 101:main.c        ****     ISR_VERIFY_StartEx(VERIFY_ISR);
+ 260              		.loc 1 101 0
+ 261 0034 6348     		ldr	r0, .L34+4
+ 262 0036 FFF7FEFF 		bl	ISR_VERIFY_StartEx
+ 263              	.LVL19:
+ 102:main.c        ****     ISR_SAMPLE_StartEx(SAMPLE_ISR);
+ 264              		.loc 1 102 0
+ 265 003a 6348     		ldr	r0, .L34+8
+ 266 003c FFF7FEFF 		bl	ISR_SAMPLE_StartEx
+ 267              	.LVL20:
+ 268              	.L19:
+ 103:main.c        **** 
+ 104:main.c        ****     for(;;)
+ 105:main.c        ****     {        
+ 106:main.c        ****         /* Non-blocking call to get the latest data recieved  */
+ 107:main.c        ****         Ch = UART_1_GetChar();
+ 269              		.loc 1 107 0
+ 270 0040 FFF7FEFF 		bl	UART_1_GetChar
+ 271              	.LVL21:
+ 108:main.c        ****         
+ 109:main.c        ****         /* Set flags based on UART command */
+ 110:main.c        ****         switch(Ch)
+ 272              		.loc 1 110 0
+ 273 0044 4138     		subs	r0, r0, #65
+ 274              	.LVL22:
+ 275 0046 3728     		cmp	r0, #55
+ 276 0048 34D8     		bhi	.L20
+ 277 004a DFE800F0 		tbb	[pc, r0]
+ 278              	.L22:
+ 279 004e 28       		.byte	(.L21-.L22)/2
+ 280 004f 2C       		.byte	(.L23-.L22)/2
+ 281 0050 1C       		.byte	(.L24-.L22)/2
+ 282 0051 33       		.byte	(.L20-.L22)/2
+ 283 0052 33       		.byte	(.L20-.L22)/2
+ 284 0053 33       		.byte	(.L20-.L22)/2
+ 285 0054 33       		.byte	(.L20-.L22)/2
+ 286 0055 33       		.byte	(.L20-.L22)/2
+ 287 0056 33       		.byte	(.L20-.L22)/2
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 8
+
+
+ 288 0057 33       		.byte	(.L20-.L22)/2
+ 289 0058 33       		.byte	(.L20-.L22)/2
+ 290 0059 33       		.byte	(.L20-.L22)/2
+ 291 005a 33       		.byte	(.L20-.L22)/2
+ 292 005b 30       		.byte	(.L25-.L22)/2
+ 293 005c 33       		.byte	(.L20-.L22)/2
+ 294 005d 33       		.byte	(.L20-.L22)/2
+ 295 005e 33       		.byte	(.L20-.L22)/2
+ 296 005f 33       		.byte	(.L20-.L22)/2
+ 297 0060 20       		.byte	(.L26-.L22)/2
+ 298 0061 33       		.byte	(.L20-.L22)/2
+ 299 0062 33       		.byte	(.L20-.L22)/2
+ 300 0063 33       		.byte	(.L20-.L22)/2
+ 301 0064 33       		.byte	(.L20-.L22)/2
+ 302 0065 24       		.byte	(.L27-.L22)/2
+ 303 0066 33       		.byte	(.L20-.L22)/2
+ 304 0067 33       		.byte	(.L20-.L22)/2
+ 305 0068 33       		.byte	(.L20-.L22)/2
+ 306 0069 33       		.byte	(.L20-.L22)/2
+ 307 006a 33       		.byte	(.L20-.L22)/2
+ 308 006b 33       		.byte	(.L20-.L22)/2
+ 309 006c 33       		.byte	(.L20-.L22)/2
+ 310 006d 33       		.byte	(.L20-.L22)/2
+ 311 006e 28       		.byte	(.L21-.L22)/2
+ 312 006f 2C       		.byte	(.L23-.L22)/2
+ 313 0070 1C       		.byte	(.L24-.L22)/2
+ 314 0071 33       		.byte	(.L20-.L22)/2
+ 315 0072 33       		.byte	(.L20-.L22)/2
+ 316 0073 33       		.byte	(.L20-.L22)/2
+ 317 0074 33       		.byte	(.L20-.L22)/2
+ 318 0075 33       		.byte	(.L20-.L22)/2
+ 319 0076 33       		.byte	(.L20-.L22)/2
+ 320 0077 33       		.byte	(.L20-.L22)/2
+ 321 0078 33       		.byte	(.L20-.L22)/2
+ 322 0079 33       		.byte	(.L20-.L22)/2
+ 323 007a 33       		.byte	(.L20-.L22)/2
+ 324 007b 30       		.byte	(.L25-.L22)/2
+ 325 007c 33       		.byte	(.L20-.L22)/2
+ 326 007d 33       		.byte	(.L20-.L22)/2
+ 327 007e 33       		.byte	(.L20-.L22)/2
+ 328 007f 33       		.byte	(.L20-.L22)/2
+ 329 0080 20       		.byte	(.L26-.L22)/2
+ 330 0081 33       		.byte	(.L20-.L22)/2
+ 331 0082 33       		.byte	(.L20-.L22)/2
+ 332 0083 33       		.byte	(.L20-.L22)/2
+ 333 0084 33       		.byte	(.L20-.L22)/2
+ 334 0085 24       		.byte	(.L27-.L22)/2
+ 335              		.p2align 1
+ 336              	.L24:
+ 111:main.c        ****         {
+ 112:main.c        ****             case 0:
+ 113:main.c        ****                 /* No new data was recieved */
+ 114:main.c        ****                 break;
+ 115:main.c        ****             case 'C':
+ 116:main.c        ****             case 'c':
+ 117:main.c        ****                 SendSingleByte = TRUE;
+ 337              		.loc 1 117 0
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 9
+
+
+ 338 0086 0122     		movs	r2, #1
+ 339 0088 504B     		ldr	r3, .L34+12
+ 340 008a 1A73     		strb	r2, [r3, #12]
+ 118:main.c        ****                 break;
+ 341              		.loc 1 118 0
+ 342 008c 12E0     		b	.L20
+ 343              	.L26:
+ 119:main.c        ****             case 'S':
+ 120:main.c        ****             case 's':                
+ 121:main.c        ****                 ContinuouslySendData = TRUE;
+ 344              		.loc 1 121 0
+ 345 008e 0122     		movs	r2, #1
+ 346 0090 4E4B     		ldr	r3, .L34+12
+ 347 0092 1A70     		strb	r2, [r3]
+ 122:main.c        ****                 break;
+ 348              		.loc 1 122 0
+ 349 0094 0EE0     		b	.L20
+ 350              	.L27:
+ 123:main.c        ****             case 'X':
+ 124:main.c        ****             case 'x':
+ 125:main.c        ****                 ContinuouslySendData = FALSE;
+ 351              		.loc 1 125 0
+ 352 0096 0022     		movs	r2, #0
+ 353 0098 4C4B     		ldr	r3, .L34+12
+ 354 009a 1A70     		strb	r2, [r3]
+ 126:main.c        ****                 break;
+ 355              		.loc 1 126 0
+ 356 009c 0AE0     		b	.L20
+ 357              	.L21:
+ 127:main.c        ****             case 'A':
+ 128:main.c        ****             case 'a': //clench sequence
+ 129:main.c        ****                 clenchGesture = TRUE;
+ 358              		.loc 1 129 0
+ 359 009e 0122     		movs	r2, #1
+ 360 00a0 4A4B     		ldr	r3, .L34+12
+ 361 00a2 5A72     		strb	r2, [r3, #9]
+ 130:main.c        ****                 break;
+ 362              		.loc 1 130 0
+ 363 00a4 06E0     		b	.L20
+ 364              	.L23:
+ 131:main.c        ****             case 'B': //spidey sequence
+ 132:main.c        ****             case 'b':
+ 133:main.c        ****                 spideyGesture = TRUE;
+ 365              		.loc 1 133 0
+ 366 00a6 0122     		movs	r2, #1
+ 367 00a8 484B     		ldr	r3, .L34+12
+ 368 00aa 9A72     		strb	r2, [r3, #10]
+ 134:main.c        ****                 break;
+ 369              		.loc 1 134 0
+ 370 00ac 02E0     		b	.L20
+ 371              	.L25:
+ 135:main.c        ****             case 'N': //neutral sequence
+ 136:main.c        ****             case 'n':
+ 137:main.c        ****                 neutralGesture = TRUE;
+ 372              		.loc 1 137 0
+ 373 00ae 0122     		movs	r2, #1
+ 374 00b0 464B     		ldr	r3, .L34+12
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 10
+
+
+ 375 00b2 DA72     		strb	r2, [r3, #11]
+ 376              	.L20:
+ 138:main.c        ****                 break;
+ 139:main.c        ****             default:
+ 140:main.c        ****                 /* Place error handling code here */
+ 141:main.c        ****                 break;    
+ 142:main.c        ****         }
+ 143:main.c        ****         
+ 144:main.c        ****         if(ADC_SAR_1_IsEndConversion(ADC_SAR_1_RETURN_STATUS))
+ 377              		.loc 1 144 0
+ 378 00b4 0120     		movs	r0, #1
+ 379 00b6 FFF7FEFF 		bl	ADC_SAR_1_IsEndConversion
+ 380              	.LVL23:
+ 381 00ba B8B1     		cbz	r0, .L28
+ 145:main.c        ****         {
+ 146:main.c        ****             CyDelay(100);
+ 382              		.loc 1 146 0
+ 383 00bc 6420     		movs	r0, #100
+ 384 00be FFF7FEFF 		bl	CyDelay
+ 385              	.LVL24:
+ 147:main.c        ****             Output = ADC_SAR_1_GetResult16();
+ 386              		.loc 1 147 0
+ 387 00c2 FFF7FEFF 		bl	ADC_SAR_1_GetResult16
+ 388              	.LVL25:
+ 148:main.c        ****             
+ 149:main.c        ****             /* Send data based on last UART command */
+ 150:main.c        ****             if(SendSingleByte || ContinuouslySendData)
+ 389              		.loc 1 150 0
+ 390 00c6 414B     		ldr	r3, .L34+12
+ 391 00c8 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
+ 392 00ca 13B9     		cbnz	r3, .L29
+ 393              		.loc 1 150 0 is_stmt 0 discriminator 1
+ 394 00cc 3F4B     		ldr	r3, .L34+12
+ 395 00ce 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 396 00d0 63B1     		cbz	r3, .L28
+ 397              	.L29:
+ 151:main.c        ****             {
+ 152:main.c        ****                 /* Format ADC result for transmition */
+ 153:main.c        ****                 sprintf(TransmitBuffer, "%lu mV\r\n", Output);
+ 398              		.loc 1 153 0 is_stmt 1
+ 399 00d2 0246     		mov	r2, r0
+ 400 00d4 3E49     		ldr	r1, .L34+16
+ 401 00d6 6846     		mov	r0, sp
+ 402              	.LVL26:
+ 403 00d8 FFF7FEFF 		bl	sprintf
+ 404              	.LVL27:
+ 154:main.c        ****                 /* Send out the data */
+ 155:main.c        ****                 UART_1_PutString(TransmitBuffer);
+ 405              		.loc 1 155 0
+ 406 00dc 6846     		mov	r0, sp
+ 407 00de FFF7FEFF 		bl	UART_1_PutString
+ 408              	.LVL28:
+ 156:main.c        ****                 UART_1_GetByte();
+ 409              		.loc 1 156 0
+ 410 00e2 FFF7FEFF 		bl	UART_1_GetByte
+ 411              	.LVL29:
+ 157:main.c        ****                 /* Reset the send once flag */
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 11
+
+
+ 158:main.c        ****                 SendSingleByte = FALSE;
+ 412              		.loc 1 158 0
+ 413 00e6 0022     		movs	r2, #0
+ 414 00e8 384B     		ldr	r3, .L34+12
+ 415 00ea 1A73     		strb	r2, [r3, #12]
+ 416              	.L28:
+ 159:main.c        ****             }      
+ 160:main.c        ****         }
+ 161:main.c        ****         if(clenchGesture == TRUE){
+ 417              		.loc 1 161 0
+ 418 00ec 374B     		ldr	r3, .L34+12
+ 419 00ee 5B7A     		ldrb	r3, [r3, #9]	@ zero_extendqisi2
+ 420 00f0 012B     		cmp	r3, #1
+ 421 00f2 1ED1     		bne	.L30
+ 162:main.c        ****             sigGesture = TRUE;
+ 422              		.loc 1 162 0
+ 423 00f4 354C     		ldr	r4, .L34+12
+ 424 00f6 2372     		strb	r3, [r4, #8]
+ 163:main.c        ****             UART_1_PutString("Clenching...\r\n");            
+ 425              		.loc 1 163 0
+ 426 00f8 3648     		ldr	r0, .L34+20
+ 427 00fa FFF7FEFF 		bl	UART_1_PutString
+ 428              	.LVL30:
+ 164:main.c        ****             PWM_1_WriteCompare(clenchValL); //thumb
+ 429              		.loc 1 164 0
+ 430 00fe 40F69800 		movw	r0, #2200
+ 431 0102 FFF7FEFF 		bl	PWM_1_WriteCompare
+ 432              	.LVL31:
+ 165:main.c        ****             PWM_2_WriteCompare(clenchValL); //index
+ 433              		.loc 1 165 0
+ 434 0106 40F69800 		movw	r0, #2200
+ 435 010a FFF7FEFF 		bl	PWM_2_WriteCompare
+ 436              	.LVL32:
+ 166:main.c        ****             PWM_3_WriteCompare(clenchValL); //middle
+ 437              		.loc 1 166 0
+ 438 010e 40F69800 		movw	r0, #2200
+ 439 0112 FFF7FEFF 		bl	PWM_3_WriteCompare
+ 440              	.LVL33:
+ 167:main.c        ****             PWM_4_WriteCompare(clenchValR); //ring
+ 441              		.loc 1 167 0
+ 442 0116 40F24C40 		movw	r0, #1100
+ 443 011a FFF7FEFF 		bl	PWM_4_WriteCompare
+ 444              	.LVL34:
+ 168:main.c        ****             PWM_5_WriteCompare(clenchValR); //pinky
+ 445              		.loc 1 168 0
+ 446 011e 40F24C40 		movw	r0, #1100
+ 447 0122 FFF7FEFF 		bl	PWM_5_WriteCompare
+ 448              	.LVL35:
+ 169:main.c        ****             UART_1_PutString("Clench complete!\r\n");
+ 449              		.loc 1 169 0
+ 450 0126 2C48     		ldr	r0, .L34+24
+ 451 0128 FFF7FEFF 		bl	UART_1_PutString
+ 452              	.LVL36:
+ 170:main.c        ****             clenchGesture = FALSE;      
+ 453              		.loc 1 170 0
+ 454 012c 0023     		movs	r3, #0
+ 455 012e 6372     		strb	r3, [r4, #9]
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 12
+
+
+ 456 0130 86E7     		b	.L19
+ 457              	.L30:
+ 171:main.c        ****         }
+ 172:main.c        ****         else if(spideyGesture == TRUE){
+ 458              		.loc 1 172 0
+ 459 0132 264B     		ldr	r3, .L34+12
+ 460 0134 9B7A     		ldrb	r3, [r3, #10]	@ zero_extendqisi2
+ 461 0136 012B     		cmp	r3, #1
+ 462 0138 1ED1     		bne	.L32
+ 173:main.c        ****             sigGesture = TRUE;
+ 463              		.loc 1 173 0
+ 464 013a 244C     		ldr	r4, .L34+12
+ 465 013c 2372     		strb	r3, [r4, #8]
+ 174:main.c        ****             UART_1_PutString("Spidey...\r\n");       
+ 466              		.loc 1 174 0
+ 467 013e 2748     		ldr	r0, .L34+28
+ 468 0140 FFF7FEFF 		bl	UART_1_PutString
+ 469              	.LVL37:
+ 175:main.c        ****             PWM_1_WriteCompare(neutralVal); //thumb
+ 470              		.loc 1 175 0
+ 471 0144 4FF4C860 		mov	r0, #1600
+ 472 0148 FFF7FEFF 		bl	PWM_1_WriteCompare
+ 473              	.LVL38:
+ 176:main.c        ****             PWM_2_WriteCompare(neutralVal); //index
+ 474              		.loc 1 176 0
+ 475 014c 4FF4C860 		mov	r0, #1600
+ 476 0150 FFF7FEFF 		bl	PWM_2_WriteCompare
+ 477              	.LVL39:
+ 177:main.c        ****             PWM_3_WriteCompare(clenchValL); //middle
+ 478              		.loc 1 177 0
+ 479 0154 40F69800 		movw	r0, #2200
+ 480 0158 FFF7FEFF 		bl	PWM_3_WriteCompare
+ 481              	.LVL40:
+ 178:main.c        ****             PWM_4_WriteCompare(clenchValR); //ring
+ 482              		.loc 1 178 0
+ 483 015c 40F24C40 		movw	r0, #1100
+ 484 0160 FFF7FEFF 		bl	PWM_4_WriteCompare
+ 485              	.LVL41:
+ 179:main.c        ****             PWM_5_WriteCompare(neutralVal); //pinky
+ 486              		.loc 1 179 0
+ 487 0164 4FF4C860 		mov	r0, #1600
+ 488 0168 FFF7FEFF 		bl	PWM_5_WriteCompare
+ 489              	.LVL42:
+ 180:main.c        ****             UART_1_PutString("Spidey complete!\r\n");
+ 490              		.loc 1 180 0
+ 491 016c 1C48     		ldr	r0, .L34+32
+ 492 016e FFF7FEFF 		bl	UART_1_PutString
+ 493              	.LVL43:
+ 181:main.c        ****             spideyGesture = FALSE;        
+ 494              		.loc 1 181 0
+ 495 0172 0023     		movs	r3, #0
+ 496 0174 A372     		strb	r3, [r4, #10]
+ 497 0176 63E7     		b	.L19
+ 498              	.L32:
+ 182:main.c        ****         }
+ 183:main.c        ****         else if (neutralGesture == TRUE){
+ 499              		.loc 1 183 0
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 13
+
+
+ 500 0178 144B     		ldr	r3, .L34+12
+ 501 017a DB7A     		ldrb	r3, [r3, #11]	@ zero_extendqisi2
+ 502 017c 012B     		cmp	r3, #1
+ 503 017e 7FF45FAF 		bne	.L19
+ 184:main.c        ****             UART_1_PutString("Neutral...\r\n");
+ 504              		.loc 1 184 0
+ 505 0182 1848     		ldr	r0, .L34+36
+ 506 0184 FFF7FEFF 		bl	UART_1_PutString
+ 507              	.LVL44:
+ 185:main.c        ****             PWM_1_WriteCompare(neutralVal); //thumb
+ 508              		.loc 1 185 0
+ 509 0188 4FF4C860 		mov	r0, #1600
+ 510 018c FFF7FEFF 		bl	PWM_1_WriteCompare
+ 511              	.LVL45:
+ 186:main.c        ****             PWM_2_WriteCompare(neutralVal); //index
+ 512              		.loc 1 186 0
+ 513 0190 4FF4C860 		mov	r0, #1600
+ 514 0194 FFF7FEFF 		bl	PWM_2_WriteCompare
+ 515              	.LVL46:
+ 187:main.c        ****             PWM_3_WriteCompare(neutralVal); //middle
+ 516              		.loc 1 187 0
+ 517 0198 4FF4C860 		mov	r0, #1600
+ 518 019c FFF7FEFF 		bl	PWM_3_WriteCompare
+ 519              	.LVL47:
+ 188:main.c        ****             PWM_4_WriteCompare(neutralVal); //ring
+ 520              		.loc 1 188 0
+ 521 01a0 4FF4C860 		mov	r0, #1600
+ 522 01a4 FFF7FEFF 		bl	PWM_4_WriteCompare
+ 523              	.LVL48:
+ 189:main.c        ****             PWM_5_WriteCompare(neutralVal); //pinky
+ 524              		.loc 1 189 0
+ 525 01a8 4FF4C860 		mov	r0, #1600
+ 526 01ac FFF7FEFF 		bl	PWM_5_WriteCompare
+ 527              	.LVL49:
+ 190:main.c        ****             UART_1_PutString("Neutral complete!\r\n");
+ 528              		.loc 1 190 0
+ 529 01b0 0D48     		ldr	r0, .L34+40
+ 530 01b2 FFF7FEFF 		bl	UART_1_PutString
+ 531              	.LVL50:
+ 191:main.c        ****             neutralGesture = FALSE;
+ 532              		.loc 1 191 0
+ 533 01b6 0022     		movs	r2, #0
+ 534 01b8 044B     		ldr	r3, .L34+12
+ 535 01ba DA72     		strb	r2, [r3, #11]
+ 536 01bc 40E7     		b	.L19
+ 537              	.L35:
+ 538 01be 00BF     		.align	2
+ 539              	.L34:
+ 540 01c0 1C000000 		.word	.LC2
+ 541 01c4 00000000 		.word	VERIFY_ISR
+ 542 01c8 00000000 		.word	SAMPLE_ISR
+ 543 01cc 00000000 		.word	.LANCHOR0
+ 544 01d0 2C000000 		.word	.LC3
+ 545 01d4 38000000 		.word	.LC4
+ 546 01d8 48000000 		.word	.LC5
+ 547 01dc 5C000000 		.word	.LC6
+ 548 01e0 68000000 		.word	.LC7
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 14
+
+
+ 549 01e4 7C000000 		.word	.LC8
+ 550 01e8 8C000000 		.word	.LC9
+ 551              		.cfi_endproc
+ 552              	.LFE66:
+ 553              		.size	main, .-main
+ 554              		.global	ms_count
+ 555              		.global	sigGesture
+ 556              		.global	spideyGesture
+ 557              		.global	neutralGesture
+ 558              		.global	clenchGesture
+ 559              		.global	SendSingleByte
+ 560              		.global	ContinuouslySendData
+ 561              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 562              		.align	2
+ 563              	.LC0:
+ 564 0000 494E5445 		.ascii	"INTERRUPT\015\012\000"
+ 564      52525550 
+ 564      540D0A00 
+ 565              	.LC1:
+ 566 000c 4849544C 		.ascii	"HITL VERIFY\015\012\000"
+ 566      20564552 
+ 566      4946590D 
+ 566      0A00
+ 567 001a 0000     		.space	2
+ 568              	.LC2:
+ 569 001c 434F4D20 		.ascii	"COM Port Open\000"
+ 569      506F7274 
+ 569      204F7065 
+ 569      6E00
+ 570 002a 0000     		.space	2
+ 571              	.LC3:
+ 572 002c 256C7520 		.ascii	"%lu mV\015\012\000"
+ 572      6D560D0A 
+ 572      00
+ 573 0035 000000   		.space	3
+ 574              	.LC4:
+ 575 0038 436C656E 		.ascii	"Clenching...\015\012\000"
+ 575      6368696E 
+ 575      672E2E2E 
+ 575      0D0A00
+ 576 0047 00       		.space	1
+ 577              	.LC5:
+ 578 0048 436C656E 		.ascii	"Clench complete!\015\012\000"
+ 578      63682063 
+ 578      6F6D706C 
+ 578      65746521 
+ 578      0D0A00
+ 579 005b 00       		.space	1
+ 580              	.LC6:
+ 581 005c 53706964 		.ascii	"Spidey...\015\012\000"
+ 581      65792E2E 
+ 581      2E0D0A00 
+ 582              	.LC7:
+ 583 0068 53706964 		.ascii	"Spidey complete!\015\012\000"
+ 583      65792063 
+ 583      6F6D706C 
+ 583      65746521 
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 15
+
+
+ 583      0D0A00
+ 584 007b 00       		.space	1
+ 585              	.LC8:
+ 586 007c 4E657574 		.ascii	"Neutral...\015\012\000"
+ 586      72616C2E 
+ 586      2E2E0D0A 
+ 586      00
+ 587 0089 000000   		.space	3
+ 588              	.LC9:
+ 589 008c 4E657574 		.ascii	"Neutral complete!\015\012\000"
+ 589      72616C20 
+ 589      636F6D70 
+ 589      6C657465 
+ 589      210D0A00 
+ 590              		.bss
+ 591              		.align	2
+ 592              		.set	.LANCHOR0,. + 0
+ 593              		.type	ContinuouslySendData, %object
+ 594              		.size	ContinuouslySendData, 1
+ 595              	ContinuouslySendData:
+ 596 0000 00       		.space	1
+ 597 0001 000000   		.space	3
+ 598              		.type	ms_count, %object
+ 599              		.size	ms_count, 4
+ 600              	ms_count:
+ 601 0004 00000000 		.space	4
+ 602              		.type	sigGesture, %object
+ 603              		.size	sigGesture, 1
+ 604              	sigGesture:
+ 605 0008 00       		.space	1
+ 606              		.type	clenchGesture, %object
+ 607              		.size	clenchGesture, 1
+ 608              	clenchGesture:
+ 609 0009 00       		.space	1
+ 610              		.type	spideyGesture, %object
+ 611              		.size	spideyGesture, 1
+ 612              	spideyGesture:
+ 613 000a 00       		.space	1
+ 614              		.type	neutralGesture, %object
+ 615              		.size	neutralGesture, 1
+ 616              	neutralGesture:
+ 617 000b 00       		.space	1
+ 618              		.type	SendSingleByte, %object
+ 619              		.size	SendSingleByte, 1
+ 620              	SendSingleByte:
+ 621 000c 00       		.space	1
+ 622              		.text
+ 623              	.Letext0:
+ 624              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 625              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 626              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 627              		.file 5 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 628              		.file 6 "Generated_Source\\PSoC5/core_cm3.h"
+ 629              		.file 7 "Generated_Source\\PSoC5/CyLib.h"
+ 630              		.file 8 "Generated_Source\\PSoC5/UART_1.h"
+ 631              		.file 9 "Generated_Source\\PSoC5/ADC_SAR_1.h"
+ 632              		.file 10 "Generated_Source\\PSoC5/PWM_1.h"
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 16
+
+
+ 633              		.file 11 "Generated_Source\\PSoC5/PWM_2.h"
+ 634              		.file 12 "Generated_Source\\PSoC5/PWM_3.h"
+ 635              		.file 13 "Generated_Source\\PSoC5/PWM_4.h"
+ 636              		.file 14 "Generated_Source\\PSoC5/PWM_5.h"
+ 637              		.file 15 "Generated_Source\\PSoC5/Timer_1.h"
+ 638              		.file 16 "Generated_Source\\PSoC5/Timer_2.h"
+ 639              		.file 17 "Generated_Source\\PSoC5/ISR_VERIFY.h"
+ 640              		.file 18 "Generated_Source\\PSoC5/ISR_SAMPLE.h"
+ 641              		.file 19 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4
+ 642              		.section	.debug_info,"",%progbits
+ 643              	.Ldebug_info0:
+ 644 0000 25060000 		.4byte	0x625
+ 645 0004 0400     		.2byte	0x4
+ 646 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 647 000a 04       		.byte	0x4
+ 648 000b 01       		.uleb128 0x1
+ 649 000c 55030000 		.4byte	.LASF59
+ 650 0010 0C       		.byte	0xc
+ 651 0011 A8020000 		.4byte	.LASF60
+ 652 0015 A0000000 		.4byte	.LASF61
+ 653 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 654 001d 00000000 		.4byte	0
+ 655 0021 00000000 		.4byte	.Ldebug_line0
+ 656 0025 02       		.uleb128 0x2
+ 657 0026 01       		.byte	0x1
+ 658 0027 06       		.byte	0x6
+ 659 0028 4D000000 		.4byte	.LASF0
+ 660 002c 02       		.uleb128 0x2
+ 661 002d 01       		.byte	0x1
+ 662 002e 08       		.byte	0x8
+ 663 002f A0010000 		.4byte	.LASF1
+ 664 0033 02       		.uleb128 0x2
+ 665 0034 02       		.byte	0x2
+ 666 0035 05       		.byte	0x5
+ 667 0036 59000000 		.4byte	.LASF2
+ 668 003a 02       		.uleb128 0x2
+ 669 003b 02       		.byte	0x2
+ 670 003c 07       		.byte	0x7
+ 671 003d 8E020000 		.4byte	.LASF3
+ 672 0041 03       		.uleb128 0x3
+ 673 0042 EC020000 		.4byte	.LASF9
+ 674 0046 02       		.byte	0x2
+ 675 0047 3F       		.byte	0x3f
+ 676 0048 4C000000 		.4byte	0x4c
+ 677 004c 02       		.uleb128 0x2
+ 678 004d 04       		.byte	0x4
+ 679 004e 05       		.byte	0x5
+ 680 004f 5B010000 		.4byte	.LASF4
+ 681 0053 02       		.uleb128 0x2
+ 682 0054 04       		.byte	0x4
+ 683 0055 07       		.byte	0x7
+ 684 0056 AF020000 		.4byte	.LASF5
+ 685 005a 02       		.uleb128 0x2
+ 686 005b 08       		.byte	0x8
+ 687 005c 05       		.byte	0x5
+ 688 005d 4D010000 		.4byte	.LASF6
+ 689 0061 02       		.uleb128 0x2
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 17
+
+
+ 690 0062 08       		.byte	0x8
+ 691 0063 07       		.byte	0x7
+ 692 0064 E1010000 		.4byte	.LASF7
+ 693 0068 04       		.uleb128 0x4
+ 694 0069 04       		.byte	0x4
+ 695 006a 05       		.byte	0x5
+ 696 006b 696E7400 		.ascii	"int\000"
+ 697 006f 02       		.uleb128 0x2
+ 698 0070 04       		.byte	0x4
+ 699 0071 07       		.byte	0x7
+ 700 0072 F8010000 		.4byte	.LASF8
+ 701 0076 03       		.uleb128 0x3
+ 702 0077 41020000 		.4byte	.LASF10
+ 703 007b 03       		.byte	0x3
+ 704 007c 2C       		.byte	0x2c
+ 705 007d 41000000 		.4byte	0x41
+ 706 0081 05       		.uleb128 0x5
+ 707 0082 F5000000 		.4byte	.LASF11
+ 708 0086 04       		.byte	0x4
+ 709 0087 E401     		.2byte	0x1e4
+ 710 0089 2C000000 		.4byte	0x2c
+ 711 008d 05       		.uleb128 0x5
+ 712 008e A1020000 		.4byte	.LASF12
+ 713 0092 04       		.byte	0x4
+ 714 0093 E601     		.2byte	0x1e6
+ 715 0095 53000000 		.4byte	0x53
+ 716 0099 02       		.uleb128 0x2
+ 717 009a 04       		.byte	0x4
+ 718 009b 04       		.byte	0x4
+ 719 009c 47010000 		.4byte	.LASF13
+ 720 00a0 02       		.uleb128 0x2
+ 721 00a1 08       		.byte	0x8
+ 722 00a2 04       		.byte	0x4
+ 723 00a3 C1020000 		.4byte	.LASF14
+ 724 00a7 02       		.uleb128 0x2
+ 725 00a8 01       		.byte	0x1
+ 726 00a9 08       		.byte	0x8
+ 727 00aa 1C020000 		.4byte	.LASF15
+ 728 00ae 02       		.uleb128 0x2
+ 729 00af 08       		.byte	0x8
+ 730 00b0 04       		.byte	0x4
+ 731 00b1 89010000 		.4byte	.LASF16
+ 732 00b5 02       		.uleb128 0x2
+ 733 00b6 04       		.byte	0x4
+ 734 00b7 07       		.byte	0x7
+ 735 00b8 6E000000 		.4byte	.LASF17
+ 736 00bc 03       		.uleb128 0x3
+ 737 00bd 9B000000 		.4byte	.LASF18
+ 738 00c1 05       		.byte	0x5
+ 739 00c2 6C       		.byte	0x6c
+ 740 00c3 6F000000 		.4byte	0x6f
+ 741 00c7 06       		.uleb128 0x6
+ 742 00c8 63000000 		.4byte	.LASF19
+ 743 00cc 01       		.byte	0x1
+ 744 00cd 15       		.byte	0x15
+ 745 00ce 00000000 		.4byte	.LFB64
+ 746 00d2 38000000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 18
+
+
+ 747 00d6 01       		.uleb128 0x1
+ 748 00d7 9C       		.byte	0x9c
+ 749 00d8 04010000 		.4byte	0x104
+ 750 00dc 07       		.uleb128 0x7
+ 751 00dd 28000000 		.4byte	.LVL0
+ 752 00e1 20050000 		.4byte	0x520
+ 753 00e5 F0000000 		.4byte	0xf0
+ 754 00e9 08       		.uleb128 0x8
+ 755 00ea 01       		.uleb128 0x1
+ 756 00eb 50       		.byte	0x50
+ 757 00ec 02       		.uleb128 0x2
+ 758 00ed 08       		.byte	0x8
+ 759 00ee 64       		.byte	0x64
+ 760 00ef 00       		.byte	0
+ 761 00f0 09       		.uleb128 0x9
+ 762 00f1 2E000000 		.4byte	.LVL1
+ 763 00f5 2B050000 		.4byte	0x52b
+ 764 00f9 08       		.uleb128 0x8
+ 765 00fa 01       		.uleb128 0x1
+ 766 00fb 50       		.byte	0x50
+ 767 00fc 05       		.uleb128 0x5
+ 768 00fd 03       		.byte	0x3
+ 769 00fe 00000000 		.4byte	.LC0
+ 770 0102 00       		.byte	0
+ 771 0103 00       		.byte	0
+ 772 0104 06       		.uleb128 0x6
+ 773 0105 6B010000 		.4byte	.LASF20
+ 774 0109 01       		.byte	0x1
+ 775 010a 21       		.byte	0x21
+ 776 010b 00000000 		.4byte	.LFB65
+ 777 010f 7C000000 		.4byte	.LFE65-.LFB65
+ 778 0113 01       		.uleb128 0x1
+ 779 0114 9C       		.byte	0x9c
+ 780 0115 49010000 		.4byte	0x149
+ 781 0119 0A       		.uleb128 0xa
+ 782 011a 6F020000 		.4byte	.LASF21
+ 783 011e 01       		.byte	0x1
+ 784 011f 23       		.byte	0x23
+ 785 0120 81000000 		.4byte	0x81
+ 786 0124 00000000 		.4byte	.LLST0
+ 787 0128 07       		.uleb128 0x7
+ 788 0129 10000000 		.4byte	.LVL3
+ 789 012d 2B050000 		.4byte	0x52b
+ 790 0131 3F010000 		.4byte	0x13f
+ 791 0135 08       		.uleb128 0x8
+ 792 0136 01       		.uleb128 0x1
+ 793 0137 50       		.byte	0x50
+ 794 0138 05       		.uleb128 0x5
+ 795 0139 03       		.byte	0x3
+ 796 013a 0C000000 		.4byte	.LC1
+ 797 013e 00       		.byte	0
+ 798 013f 0B       		.uleb128 0xb
+ 799 0140 18000000 		.4byte	.LVL5
+ 800 0144 36050000 		.4byte	0x536
+ 801 0148 00       		.byte	0
+ 802 0149 0C       		.uleb128 0xc
+ 803 014a 83000000 		.4byte	.LASF62
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 19
+
+
+ 804 014e 01       		.byte	0x1
+ 805 014f 45       		.byte	0x45
+ 806 0150 68000000 		.4byte	0x68
+ 807 0154 00000000 		.4byte	.LFB66
+ 808 0158 EC010000 		.4byte	.LFE66-.LFB66
+ 809 015c 01       		.uleb128 0x1
+ 810 015d 9C       		.byte	0x9c
+ 811 015e 88040000 		.4byte	0x488
+ 812 0162 0A       		.uleb128 0xa
+ 813 0163 64010000 		.4byte	.LASF22
+ 814 0167 01       		.byte	0x1
+ 815 0168 48       		.byte	0x48
+ 816 0169 8D000000 		.4byte	0x8d
+ 817 016d 2A000000 		.4byte	.LLST1
+ 818 0171 0D       		.uleb128 0xd
+ 819 0172 436800   		.ascii	"Ch\000"
+ 820 0175 01       		.byte	0x1
+ 821 0176 4A       		.byte	0x4a
+ 822 0177 81000000 		.4byte	0x81
+ 823 017b 48000000 		.4byte	.LLST2
+ 824 017f 0E       		.uleb128 0xe
+ 825 0180 00000000 		.4byte	.LASF23
+ 826 0184 01       		.byte	0x1
+ 827 0185 4D       		.byte	0x4d
+ 828 0186 88040000 		.4byte	0x488
+ 829 018a 02       		.uleb128 0x2
+ 830 018b 91       		.byte	0x91
+ 831 018c 68       		.sleb128 -24
+ 832 018d 0F       		.uleb128 0xf
+ 833 018e FB000000 		.4byte	.LASF24
+ 834 0192 01       		.byte	0x1
+ 835 0193 5E       		.byte	0x5e
+ 836 0194 68000000 		.4byte	0x68
+ 837 0198 9808     		.2byte	0x898
+ 838 019a 0F       		.uleb128 0xf
+ 839 019b 95010000 		.4byte	.LASF25
+ 840 019f 01       		.byte	0x1
+ 841 01a0 5F       		.byte	0x5f
+ 842 01a1 68000000 		.4byte	0x68
+ 843 01a5 4C04     		.2byte	0x44c
+ 844 01a7 0F       		.uleb128 0xf
+ 845 01a8 1C010000 		.4byte	.LASF26
+ 846 01ac 01       		.byte	0x1
+ 847 01ad 60       		.byte	0x60
+ 848 01ae 68000000 		.4byte	0x68
+ 849 01b2 4006     		.2byte	0x640
+ 850 01b4 0B       		.uleb128 0xb
+ 851 01b5 08000000 		.4byte	.LVL8
+ 852 01b9 41050000 		.4byte	0x541
+ 853 01bd 0B       		.uleb128 0xb
+ 854 01be 0C000000 		.4byte	.LVL9
+ 855 01c2 4C050000 		.4byte	0x54c
+ 856 01c6 0B       		.uleb128 0xb
+ 857 01c7 10000000 		.4byte	.LVL10
+ 858 01cb 57050000 		.4byte	0x557
+ 859 01cf 07       		.uleb128 0x7
+ 860 01d0 16000000 		.4byte	.LVL11
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 20
+
+
+ 861 01d4 2B050000 		.4byte	0x52b
+ 862 01d8 E6010000 		.4byte	0x1e6
+ 863 01dc 08       		.uleb128 0x8
+ 864 01dd 01       		.uleb128 0x1
+ 865 01de 50       		.byte	0x50
+ 866 01df 05       		.uleb128 0x5
+ 867 01e0 03       		.byte	0x3
+ 868 01e1 1C000000 		.4byte	.LC2
+ 869 01e5 00       		.byte	0
+ 870 01e6 0B       		.uleb128 0xb
+ 871 01e7 1A000000 		.4byte	.LVL12
+ 872 01eb 62050000 		.4byte	0x562
+ 873 01ef 0B       		.uleb128 0xb
+ 874 01f0 1E000000 		.4byte	.LVL13
+ 875 01f4 6D050000 		.4byte	0x56d
+ 876 01f8 0B       		.uleb128 0xb
+ 877 01f9 22000000 		.4byte	.LVL14
+ 878 01fd 78050000 		.4byte	0x578
+ 879 0201 0B       		.uleb128 0xb
+ 880 0202 26000000 		.4byte	.LVL15
+ 881 0206 83050000 		.4byte	0x583
+ 882 020a 0B       		.uleb128 0xb
+ 883 020b 2A000000 		.4byte	.LVL16
+ 884 020f 8E050000 		.4byte	0x58e
+ 885 0213 0B       		.uleb128 0xb
+ 886 0214 30000000 		.4byte	.LVL17
+ 887 0218 99050000 		.4byte	0x599
+ 888 021c 0B       		.uleb128 0xb
+ 889 021d 34000000 		.4byte	.LVL18
+ 890 0221 A4050000 		.4byte	0x5a4
+ 891 0225 07       		.uleb128 0x7
+ 892 0226 3A000000 		.4byte	.LVL19
+ 893 022a AF050000 		.4byte	0x5af
+ 894 022e 3C020000 		.4byte	0x23c
+ 895 0232 08       		.uleb128 0x8
+ 896 0233 01       		.uleb128 0x1
+ 897 0234 50       		.byte	0x50
+ 898 0235 05       		.uleb128 0x5
+ 899 0236 03       		.byte	0x3
+ 900 0237 00000000 		.4byte	VERIFY_ISR
+ 901 023b 00       		.byte	0
+ 902 023c 07       		.uleb128 0x7
+ 903 023d 40000000 		.4byte	.LVL20
+ 904 0241 BA050000 		.4byte	0x5ba
+ 905 0245 53020000 		.4byte	0x253
+ 906 0249 08       		.uleb128 0x8
+ 907 024a 01       		.uleb128 0x1
+ 908 024b 50       		.byte	0x50
+ 909 024c 05       		.uleb128 0x5
+ 910 024d 03       		.byte	0x3
+ 911 024e 00000000 		.4byte	SAMPLE_ISR
+ 912 0252 00       		.byte	0
+ 913 0253 0B       		.uleb128 0xb
+ 914 0254 44000000 		.4byte	.LVL21
+ 915 0258 36050000 		.4byte	0x536
+ 916 025c 07       		.uleb128 0x7
+ 917 025d BA000000 		.4byte	.LVL23
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 21
+
+
+ 918 0261 C5050000 		.4byte	0x5c5
+ 919 0265 6F020000 		.4byte	0x26f
+ 920 0269 08       		.uleb128 0x8
+ 921 026a 01       		.uleb128 0x1
+ 922 026b 50       		.byte	0x50
+ 923 026c 01       		.uleb128 0x1
+ 924 026d 31       		.byte	0x31
+ 925 026e 00       		.byte	0
+ 926 026f 07       		.uleb128 0x7
+ 927 0270 C2000000 		.4byte	.LVL24
+ 928 0274 20050000 		.4byte	0x520
+ 929 0278 83020000 		.4byte	0x283
+ 930 027c 08       		.uleb128 0x8
+ 931 027d 01       		.uleb128 0x1
+ 932 027e 50       		.byte	0x50
+ 933 027f 02       		.uleb128 0x2
+ 934 0280 08       		.byte	0x8
+ 935 0281 64       		.byte	0x64
+ 936 0282 00       		.byte	0
+ 937 0283 0B       		.uleb128 0xb
+ 938 0284 C6000000 		.4byte	.LVL25
+ 939 0288 D0050000 		.4byte	0x5d0
+ 940 028c 07       		.uleb128 0x7
+ 941 028d DC000000 		.4byte	.LVL27
+ 942 0291 DB050000 		.4byte	0x5db
+ 943 0295 A9020000 		.4byte	0x2a9
+ 944 0299 08       		.uleb128 0x8
+ 945 029a 01       		.uleb128 0x1
+ 946 029b 50       		.byte	0x50
+ 947 029c 02       		.uleb128 0x2
+ 948 029d 7D       		.byte	0x7d
+ 949 029e 00       		.sleb128 0
+ 950 029f 08       		.uleb128 0x8
+ 951 02a0 01       		.uleb128 0x1
+ 952 02a1 51       		.byte	0x51
+ 953 02a2 05       		.uleb128 0x5
+ 954 02a3 03       		.byte	0x3
+ 955 02a4 2C000000 		.4byte	.LC3
+ 956 02a8 00       		.byte	0
+ 957 02a9 07       		.uleb128 0x7
+ 958 02aa E2000000 		.4byte	.LVL28
+ 959 02ae 2B050000 		.4byte	0x52b
+ 960 02b2 BD020000 		.4byte	0x2bd
+ 961 02b6 08       		.uleb128 0x8
+ 962 02b7 01       		.uleb128 0x1
+ 963 02b8 50       		.byte	0x50
+ 964 02b9 02       		.uleb128 0x2
+ 965 02ba 7D       		.byte	0x7d
+ 966 02bb 00       		.sleb128 0
+ 967 02bc 00       		.byte	0
+ 968 02bd 0B       		.uleb128 0xb
+ 969 02be E6000000 		.4byte	.LVL29
+ 970 02c2 E6050000 		.4byte	0x5e6
+ 971 02c6 07       		.uleb128 0x7
+ 972 02c7 FE000000 		.4byte	.LVL30
+ 973 02cb 2B050000 		.4byte	0x52b
+ 974 02cf DD020000 		.4byte	0x2dd
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 22
+
+
+ 975 02d3 08       		.uleb128 0x8
+ 976 02d4 01       		.uleb128 0x1
+ 977 02d5 50       		.byte	0x50
+ 978 02d6 05       		.uleb128 0x5
+ 979 02d7 03       		.byte	0x3
+ 980 02d8 38000000 		.4byte	.LC4
+ 981 02dc 00       		.byte	0
+ 982 02dd 07       		.uleb128 0x7
+ 983 02de 06010000 		.4byte	.LVL31
+ 984 02e2 F1050000 		.4byte	0x5f1
+ 985 02e6 F2020000 		.4byte	0x2f2
+ 986 02ea 08       		.uleb128 0x8
+ 987 02eb 01       		.uleb128 0x1
+ 988 02ec 50       		.byte	0x50
+ 989 02ed 03       		.uleb128 0x3
+ 990 02ee 0A       		.byte	0xa
+ 991 02ef 9808     		.2byte	0x898
+ 992 02f1 00       		.byte	0
+ 993 02f2 07       		.uleb128 0x7
+ 994 02f3 0E010000 		.4byte	.LVL32
+ 995 02f7 FC050000 		.4byte	0x5fc
+ 996 02fb 07030000 		.4byte	0x307
+ 997 02ff 08       		.uleb128 0x8
+ 998 0300 01       		.uleb128 0x1
+ 999 0301 50       		.byte	0x50
+ 1000 0302 03       		.uleb128 0x3
+ 1001 0303 0A       		.byte	0xa
+ 1002 0304 9808     		.2byte	0x898
+ 1003 0306 00       		.byte	0
+ 1004 0307 07       		.uleb128 0x7
+ 1005 0308 16010000 		.4byte	.LVL33
+ 1006 030c 07060000 		.4byte	0x607
+ 1007 0310 1C030000 		.4byte	0x31c
+ 1008 0314 08       		.uleb128 0x8
+ 1009 0315 01       		.uleb128 0x1
+ 1010 0316 50       		.byte	0x50
+ 1011 0317 03       		.uleb128 0x3
+ 1012 0318 0A       		.byte	0xa
+ 1013 0319 9808     		.2byte	0x898
+ 1014 031b 00       		.byte	0
+ 1015 031c 07       		.uleb128 0x7
+ 1016 031d 1E010000 		.4byte	.LVL34
+ 1017 0321 12060000 		.4byte	0x612
+ 1018 0325 31030000 		.4byte	0x331
+ 1019 0329 08       		.uleb128 0x8
+ 1020 032a 01       		.uleb128 0x1
+ 1021 032b 50       		.byte	0x50
+ 1022 032c 03       		.uleb128 0x3
+ 1023 032d 0A       		.byte	0xa
+ 1024 032e 4C04     		.2byte	0x44c
+ 1025 0330 00       		.byte	0
+ 1026 0331 07       		.uleb128 0x7
+ 1027 0332 26010000 		.4byte	.LVL35
+ 1028 0336 1D060000 		.4byte	0x61d
+ 1029 033a 46030000 		.4byte	0x346
+ 1030 033e 08       		.uleb128 0x8
+ 1031 033f 01       		.uleb128 0x1
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 23
+
+
+ 1032 0340 50       		.byte	0x50
+ 1033 0341 03       		.uleb128 0x3
+ 1034 0342 0A       		.byte	0xa
+ 1035 0343 4C04     		.2byte	0x44c
+ 1036 0345 00       		.byte	0
+ 1037 0346 07       		.uleb128 0x7
+ 1038 0347 2C010000 		.4byte	.LVL36
+ 1039 034b 2B050000 		.4byte	0x52b
+ 1040 034f 5D030000 		.4byte	0x35d
+ 1041 0353 08       		.uleb128 0x8
+ 1042 0354 01       		.uleb128 0x1
+ 1043 0355 50       		.byte	0x50
+ 1044 0356 05       		.uleb128 0x5
+ 1045 0357 03       		.byte	0x3
+ 1046 0358 48000000 		.4byte	.LC5
+ 1047 035c 00       		.byte	0
+ 1048 035d 07       		.uleb128 0x7
+ 1049 035e 44010000 		.4byte	.LVL37
+ 1050 0362 2B050000 		.4byte	0x52b
+ 1051 0366 74030000 		.4byte	0x374
+ 1052 036a 08       		.uleb128 0x8
+ 1053 036b 01       		.uleb128 0x1
+ 1054 036c 50       		.byte	0x50
+ 1055 036d 05       		.uleb128 0x5
+ 1056 036e 03       		.byte	0x3
+ 1057 036f 5C000000 		.4byte	.LC6
+ 1058 0373 00       		.byte	0
+ 1059 0374 07       		.uleb128 0x7
+ 1060 0375 4C010000 		.4byte	.LVL38
+ 1061 0379 F1050000 		.4byte	0x5f1
+ 1062 037d 89030000 		.4byte	0x389
+ 1063 0381 08       		.uleb128 0x8
+ 1064 0382 01       		.uleb128 0x1
+ 1065 0383 50       		.byte	0x50
+ 1066 0384 03       		.uleb128 0x3
+ 1067 0385 0A       		.byte	0xa
+ 1068 0386 4006     		.2byte	0x640
+ 1069 0388 00       		.byte	0
+ 1070 0389 07       		.uleb128 0x7
+ 1071 038a 54010000 		.4byte	.LVL39
+ 1072 038e FC050000 		.4byte	0x5fc
+ 1073 0392 9E030000 		.4byte	0x39e
+ 1074 0396 08       		.uleb128 0x8
+ 1075 0397 01       		.uleb128 0x1
+ 1076 0398 50       		.byte	0x50
+ 1077 0399 03       		.uleb128 0x3
+ 1078 039a 0A       		.byte	0xa
+ 1079 039b 4006     		.2byte	0x640
+ 1080 039d 00       		.byte	0
+ 1081 039e 07       		.uleb128 0x7
+ 1082 039f 5C010000 		.4byte	.LVL40
+ 1083 03a3 07060000 		.4byte	0x607
+ 1084 03a7 B3030000 		.4byte	0x3b3
+ 1085 03ab 08       		.uleb128 0x8
+ 1086 03ac 01       		.uleb128 0x1
+ 1087 03ad 50       		.byte	0x50
+ 1088 03ae 03       		.uleb128 0x3
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 24
+
+
+ 1089 03af 0A       		.byte	0xa
+ 1090 03b0 9808     		.2byte	0x898
+ 1091 03b2 00       		.byte	0
+ 1092 03b3 07       		.uleb128 0x7
+ 1093 03b4 64010000 		.4byte	.LVL41
+ 1094 03b8 12060000 		.4byte	0x612
+ 1095 03bc C8030000 		.4byte	0x3c8
+ 1096 03c0 08       		.uleb128 0x8
+ 1097 03c1 01       		.uleb128 0x1
+ 1098 03c2 50       		.byte	0x50
+ 1099 03c3 03       		.uleb128 0x3
+ 1100 03c4 0A       		.byte	0xa
+ 1101 03c5 4C04     		.2byte	0x44c
+ 1102 03c7 00       		.byte	0
+ 1103 03c8 07       		.uleb128 0x7
+ 1104 03c9 6C010000 		.4byte	.LVL42
+ 1105 03cd 1D060000 		.4byte	0x61d
+ 1106 03d1 DD030000 		.4byte	0x3dd
+ 1107 03d5 08       		.uleb128 0x8
+ 1108 03d6 01       		.uleb128 0x1
+ 1109 03d7 50       		.byte	0x50
+ 1110 03d8 03       		.uleb128 0x3
+ 1111 03d9 0A       		.byte	0xa
+ 1112 03da 4006     		.2byte	0x640
+ 1113 03dc 00       		.byte	0
+ 1114 03dd 07       		.uleb128 0x7
+ 1115 03de 72010000 		.4byte	.LVL43
+ 1116 03e2 2B050000 		.4byte	0x52b
+ 1117 03e6 F4030000 		.4byte	0x3f4
+ 1118 03ea 08       		.uleb128 0x8
+ 1119 03eb 01       		.uleb128 0x1
+ 1120 03ec 50       		.byte	0x50
+ 1121 03ed 05       		.uleb128 0x5
+ 1122 03ee 03       		.byte	0x3
+ 1123 03ef 68000000 		.4byte	.LC7
+ 1124 03f3 00       		.byte	0
+ 1125 03f4 07       		.uleb128 0x7
+ 1126 03f5 88010000 		.4byte	.LVL44
+ 1127 03f9 2B050000 		.4byte	0x52b
+ 1128 03fd 0B040000 		.4byte	0x40b
+ 1129 0401 08       		.uleb128 0x8
+ 1130 0402 01       		.uleb128 0x1
+ 1131 0403 50       		.byte	0x50
+ 1132 0404 05       		.uleb128 0x5
+ 1133 0405 03       		.byte	0x3
+ 1134 0406 7C000000 		.4byte	.LC8
+ 1135 040a 00       		.byte	0
+ 1136 040b 07       		.uleb128 0x7
+ 1137 040c 90010000 		.4byte	.LVL45
+ 1138 0410 F1050000 		.4byte	0x5f1
+ 1139 0414 20040000 		.4byte	0x420
+ 1140 0418 08       		.uleb128 0x8
+ 1141 0419 01       		.uleb128 0x1
+ 1142 041a 50       		.byte	0x50
+ 1143 041b 03       		.uleb128 0x3
+ 1144 041c 0A       		.byte	0xa
+ 1145 041d 4006     		.2byte	0x640
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 25
+
+
+ 1146 041f 00       		.byte	0
+ 1147 0420 07       		.uleb128 0x7
+ 1148 0421 98010000 		.4byte	.LVL46
+ 1149 0425 FC050000 		.4byte	0x5fc
+ 1150 0429 35040000 		.4byte	0x435
+ 1151 042d 08       		.uleb128 0x8
+ 1152 042e 01       		.uleb128 0x1
+ 1153 042f 50       		.byte	0x50
+ 1154 0430 03       		.uleb128 0x3
+ 1155 0431 0A       		.byte	0xa
+ 1156 0432 4006     		.2byte	0x640
+ 1157 0434 00       		.byte	0
+ 1158 0435 07       		.uleb128 0x7
+ 1159 0436 A0010000 		.4byte	.LVL47
+ 1160 043a 07060000 		.4byte	0x607
+ 1161 043e 4A040000 		.4byte	0x44a
+ 1162 0442 08       		.uleb128 0x8
+ 1163 0443 01       		.uleb128 0x1
+ 1164 0444 50       		.byte	0x50
+ 1165 0445 03       		.uleb128 0x3
+ 1166 0446 0A       		.byte	0xa
+ 1167 0447 4006     		.2byte	0x640
+ 1168 0449 00       		.byte	0
+ 1169 044a 07       		.uleb128 0x7
+ 1170 044b A8010000 		.4byte	.LVL48
+ 1171 044f 12060000 		.4byte	0x612
+ 1172 0453 5F040000 		.4byte	0x45f
+ 1173 0457 08       		.uleb128 0x8
+ 1174 0458 01       		.uleb128 0x1
+ 1175 0459 50       		.byte	0x50
+ 1176 045a 03       		.uleb128 0x3
+ 1177 045b 0A       		.byte	0xa
+ 1178 045c 4006     		.2byte	0x640
+ 1179 045e 00       		.byte	0
+ 1180 045f 07       		.uleb128 0x7
+ 1181 0460 B0010000 		.4byte	.LVL49
+ 1182 0464 1D060000 		.4byte	0x61d
+ 1183 0468 74040000 		.4byte	0x474
+ 1184 046c 08       		.uleb128 0x8
+ 1185 046d 01       		.uleb128 0x1
+ 1186 046e 50       		.byte	0x50
+ 1187 046f 03       		.uleb128 0x3
+ 1188 0470 0A       		.byte	0xa
+ 1189 0471 4006     		.2byte	0x640
+ 1190 0473 00       		.byte	0
+ 1191 0474 09       		.uleb128 0x9
+ 1192 0475 B6010000 		.4byte	.LVL50
+ 1193 0479 2B050000 		.4byte	0x52b
+ 1194 047d 08       		.uleb128 0x8
+ 1195 047e 01       		.uleb128 0x1
+ 1196 047f 50       		.byte	0x50
+ 1197 0480 05       		.uleb128 0x5
+ 1198 0481 03       		.byte	0x3
+ 1199 0482 8C000000 		.4byte	.LC9
+ 1200 0486 00       		.byte	0
+ 1201 0487 00       		.byte	0
+ 1202 0488 10       		.uleb128 0x10
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 26
+
+
+ 1203 0489 A7000000 		.4byte	0xa7
+ 1204 048d 98040000 		.4byte	0x498
+ 1205 0491 11       		.uleb128 0x11
+ 1206 0492 B5000000 		.4byte	0xb5
+ 1207 0496 0F       		.byte	0xf
+ 1208 0497 00       		.byte	0
+ 1209 0498 12       		.uleb128 0x12
+ 1210 0499 48030000 		.4byte	.LASF27
+ 1211 049d 06       		.byte	0x6
+ 1212 049e 1207     		.2byte	0x712
+ 1213 04a0 A4040000 		.4byte	0x4a4
+ 1214 04a4 13       		.uleb128 0x13
+ 1215 04a5 76000000 		.4byte	0x76
+ 1216 04a9 14       		.uleb128 0x14
+ 1217 04aa 79020000 		.4byte	.LASF28
+ 1218 04ae 01       		.byte	0x1
+ 1219 04af 0C       		.byte	0xc
+ 1220 04b0 81000000 		.4byte	0x81
+ 1221 04b4 05       		.uleb128 0x5
+ 1222 04b5 03       		.byte	0x3
+ 1223 04b6 00000000 		.4byte	ContinuouslySendData
+ 1224 04ba 14       		.uleb128 0x14
+ 1225 04bb C4010000 		.4byte	.LASF29
+ 1226 04bf 01       		.byte	0x1
+ 1227 04c0 0D       		.byte	0xd
+ 1228 04c1 81000000 		.4byte	0x81
+ 1229 04c5 05       		.uleb128 0x5
+ 1230 04c6 03       		.byte	0x3
+ 1231 04c7 00000000 		.4byte	SendSingleByte
+ 1232 04cb 14       		.uleb128 0x14
+ 1233 04cc AE010000 		.4byte	.LASF30
+ 1234 04d0 01       		.byte	0x1
+ 1235 04d1 0E       		.byte	0xe
+ 1236 04d2 81000000 		.4byte	0x81
+ 1237 04d6 05       		.uleb128 0x5
+ 1238 04d7 03       		.byte	0x3
+ 1239 04d8 00000000 		.4byte	clenchGesture
+ 1240 04dc 14       		.uleb128 0x14
+ 1241 04dd 2B030000 		.4byte	.LASF31
+ 1242 04e1 01       		.byte	0x1
+ 1243 04e2 0F       		.byte	0xf
+ 1244 04e3 81000000 		.4byte	0x81
+ 1245 04e7 05       		.uleb128 0x5
+ 1246 04e8 03       		.byte	0x3
+ 1247 04e9 00000000 		.4byte	neutralGesture
+ 1248 04ed 14       		.uleb128 0x14
+ 1249 04ee 3A030000 		.4byte	.LASF32
+ 1250 04f2 01       		.byte	0x1
+ 1251 04f3 10       		.byte	0x10
+ 1252 04f4 81000000 		.4byte	0x81
+ 1253 04f8 05       		.uleb128 0x5
+ 1254 04f9 03       		.byte	0x3
+ 1255 04fa 00000000 		.4byte	spideyGesture
+ 1256 04fe 14       		.uleb128 0x14
+ 1257 04ff 11020000 		.4byte	.LASF33
+ 1258 0503 01       		.byte	0x1
+ 1259 0504 11       		.byte	0x11
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 27
+
+
+ 1260 0505 81000000 		.4byte	0x81
+ 1261 0509 05       		.uleb128 0x5
+ 1262 050a 03       		.byte	0x3
+ 1263 050b 00000000 		.4byte	sigGesture
+ 1264 050f 14       		.uleb128 0x14
+ 1265 0510 21020000 		.4byte	.LASF34
+ 1266 0514 01       		.byte	0x1
+ 1267 0515 12       		.byte	0x12
+ 1268 0516 BC000000 		.4byte	0xbc
+ 1269 051a 05       		.uleb128 0x5
+ 1270 051b 03       		.byte	0x3
+ 1271 051c 00000000 		.4byte	ms_count
+ 1272 0520 15       		.uleb128 0x15
+ 1273 0521 E3030000 		.4byte	.LASF35
+ 1274 0525 E3030000 		.4byte	.LASF35
+ 1275 0529 07       		.byte	0x7
+ 1276 052a 76       		.byte	0x76
+ 1277 052b 15       		.uleb128 0x15
+ 1278 052c C8020000 		.4byte	.LASF36
+ 1279 0530 C8020000 		.4byte	.LASF36
+ 1280 0534 08       		.byte	0x8
+ 1281 0535 8B       		.byte	0x8b
+ 1282 0536 15       		.uleb128 0x15
+ 1283 0537 22000000 		.4byte	.LASF37
+ 1284 053b 22000000 		.4byte	.LASF37
+ 1285 053f 08       		.byte	0x8
+ 1286 0540 71       		.byte	0x71
+ 1287 0541 15       		.uleb128 0x15
+ 1288 0542 31000000 		.4byte	.LASF38
+ 1289 0546 31000000 		.4byte	.LASF38
+ 1290 054a 09       		.byte	0x9
+ 1291 054b 34       		.byte	0x34
+ 1292 054c 15       		.uleb128 0x15
+ 1293 054d 27010000 		.4byte	.LASF39
+ 1294 0551 27010000 		.4byte	.LASF39
+ 1295 0555 08       		.byte	0x8
+ 1296 0556 54       		.byte	0x54
+ 1297 0557 15       		.uleb128 0x15
+ 1298 0558 2A020000 		.4byte	.LASF40
+ 1299 055c 2A020000 		.4byte	.LASF40
+ 1300 0560 09       		.byte	0x9
+ 1301 0561 D1       		.byte	0xd1
+ 1302 0562 15       		.uleb128 0x15
+ 1303 0563 41000000 		.4byte	.LASF41
+ 1304 0567 41000000 		.4byte	.LASF41
+ 1305 056b 0A       		.byte	0xa
+ 1306 056c 92       		.byte	0x92
+ 1307 056d 15       		.uleb128 0x15
+ 1308 056e 05020000 		.4byte	.LASF42
+ 1309 0572 05020000 		.4byte	.LASF42
+ 1310 0576 0B       		.byte	0xb
+ 1311 0577 92       		.byte	0x92
+ 1312 0578 15       		.uleb128 0x15
+ 1313 0579 77000000 		.4byte	.LASF43
+ 1314 057d 77000000 		.4byte	.LASF43
+ 1315 0581 0C       		.byte	0xc
+ 1316 0582 92       		.byte	0x92
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 28
+
+
+ 1317 0583 15       		.uleb128 0x15
+ 1318 0584 63020000 		.4byte	.LASF44
+ 1319 0588 63020000 		.4byte	.LASF44
+ 1320 058c 0D       		.byte	0xd
+ 1321 058d 92       		.byte	0x92
+ 1322 058e 15       		.uleb128 0x15
+ 1323 058f DB000000 		.4byte	.LASF45
+ 1324 0593 DB000000 		.4byte	.LASF45
+ 1325 0597 0E       		.byte	0xe
+ 1326 0598 92       		.byte	0x92
+ 1327 0599 15       		.uleb128 0x15
+ 1328 059a D3010000 		.4byte	.LASF46
+ 1329 059e D3010000 		.4byte	.LASF46
+ 1330 05a2 0F       		.byte	0xf
+ 1331 05a3 5A       		.byte	0x5a
+ 1332 05a4 15       		.uleb128 0x15
+ 1333 05a5 E7000000 		.4byte	.LASF47
+ 1334 05a9 E7000000 		.4byte	.LASF47
+ 1335 05ad 10       		.byte	0x10
+ 1336 05ae 5A       		.byte	0x5a
+ 1337 05af 15       		.uleb128 0x15
+ 1338 05b0 D9020000 		.4byte	.LASF48
+ 1339 05b4 D9020000 		.4byte	.LASF48
+ 1340 05b8 11       		.byte	0x11
+ 1341 05b9 18       		.byte	0x18
+ 1342 05ba 15       		.uleb128 0x15
+ 1343 05bb 05030000 		.4byte	.LASF49
+ 1344 05bf 05030000 		.4byte	.LASF49
+ 1345 05c3 12       		.byte	0x12
+ 1346 05c4 18       		.byte	0x18
+ 1347 05c5 15       		.uleb128 0x15
+ 1348 05c6 49020000 		.4byte	.LASF50
+ 1349 05ca 49020000 		.4byte	.LASF50
+ 1350 05ce 09       		.byte	0x9
+ 1351 05cf 39       		.byte	0x39
+ 1352 05d0 15       		.uleb128 0x15
+ 1353 05d1 06010000 		.4byte	.LASF51
+ 1354 05d5 06010000 		.4byte	.LASF51
+ 1355 05d9 09       		.byte	0x9
+ 1356 05da 3B       		.byte	0x3b
+ 1357 05db 15       		.uleb128 0x15
+ 1358 05dc BC010000 		.4byte	.LASF52
+ 1359 05e0 BC010000 		.4byte	.LASF52
+ 1360 05e4 13       		.byte	0x13
+ 1361 05e5 E7       		.byte	0xe7
+ 1362 05e6 15       		.uleb128 0x15
+ 1363 05e7 F6020000 		.4byte	.LASF53
+ 1364 05eb F6020000 		.4byte	.LASF53
+ 1365 05ef 08       		.byte	0x8
+ 1366 05f0 72       		.byte	0x72
+ 1367 05f1 15       		.uleb128 0x15
+ 1368 05f2 76010000 		.4byte	.LASF54
+ 1369 05f6 76010000 		.4byte	.LASF54
+ 1370 05fa 0A       		.byte	0xa
+ 1371 05fb C3       		.byte	0xc3
+ 1372 05fc 15       		.uleb128 0x15
+ 1373 05fd 34010000 		.4byte	.LASF55
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 29
+
+
+ 1374 0601 34010000 		.4byte	.LASF55
+ 1375 0605 0B       		.byte	0xb
+ 1376 0606 C3       		.byte	0xc3
+ 1377 0607 15       		.uleb128 0x15
+ 1378 0608 88000000 		.4byte	.LASF56
+ 1379 060c 88000000 		.4byte	.LASF56
+ 1380 0610 0C       		.byte	0xc
+ 1381 0611 C3       		.byte	0xc3
+ 1382 0612 15       		.uleb128 0x15
+ 1383 0613 0F000000 		.4byte	.LASF57
+ 1384 0617 0F000000 		.4byte	.LASF57
+ 1385 061b 0D       		.byte	0xd
+ 1386 061c C3       		.byte	0xc3
+ 1387 061d 15       		.uleb128 0x15
+ 1388 061e 18030000 		.4byte	.LASF58
+ 1389 0622 18030000 		.4byte	.LASF58
+ 1390 0626 0E       		.byte	0xe
+ 1391 0627 C3       		.byte	0xc3
+ 1392 0628 00       		.byte	0
+ 1393              		.section	.debug_abbrev,"",%progbits
+ 1394              	.Ldebug_abbrev0:
+ 1395 0000 01       		.uleb128 0x1
+ 1396 0001 11       		.uleb128 0x11
+ 1397 0002 01       		.byte	0x1
+ 1398 0003 25       		.uleb128 0x25
+ 1399 0004 0E       		.uleb128 0xe
+ 1400 0005 13       		.uleb128 0x13
+ 1401 0006 0B       		.uleb128 0xb
+ 1402 0007 03       		.uleb128 0x3
+ 1403 0008 0E       		.uleb128 0xe
+ 1404 0009 1B       		.uleb128 0x1b
+ 1405 000a 0E       		.uleb128 0xe
+ 1406 000b 55       		.uleb128 0x55
+ 1407 000c 17       		.uleb128 0x17
+ 1408 000d 11       		.uleb128 0x11
+ 1409 000e 01       		.uleb128 0x1
+ 1410 000f 10       		.uleb128 0x10
+ 1411 0010 17       		.uleb128 0x17
+ 1412 0011 00       		.byte	0
+ 1413 0012 00       		.byte	0
+ 1414 0013 02       		.uleb128 0x2
+ 1415 0014 24       		.uleb128 0x24
+ 1416 0015 00       		.byte	0
+ 1417 0016 0B       		.uleb128 0xb
+ 1418 0017 0B       		.uleb128 0xb
+ 1419 0018 3E       		.uleb128 0x3e
+ 1420 0019 0B       		.uleb128 0xb
+ 1421 001a 03       		.uleb128 0x3
+ 1422 001b 0E       		.uleb128 0xe
+ 1423 001c 00       		.byte	0
+ 1424 001d 00       		.byte	0
+ 1425 001e 03       		.uleb128 0x3
+ 1426 001f 16       		.uleb128 0x16
+ 1427 0020 00       		.byte	0
+ 1428 0021 03       		.uleb128 0x3
+ 1429 0022 0E       		.uleb128 0xe
+ 1430 0023 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 30
+
+
+ 1431 0024 0B       		.uleb128 0xb
+ 1432 0025 3B       		.uleb128 0x3b
+ 1433 0026 0B       		.uleb128 0xb
+ 1434 0027 49       		.uleb128 0x49
+ 1435 0028 13       		.uleb128 0x13
+ 1436 0029 00       		.byte	0
+ 1437 002a 00       		.byte	0
+ 1438 002b 04       		.uleb128 0x4
+ 1439 002c 24       		.uleb128 0x24
+ 1440 002d 00       		.byte	0
+ 1441 002e 0B       		.uleb128 0xb
+ 1442 002f 0B       		.uleb128 0xb
+ 1443 0030 3E       		.uleb128 0x3e
+ 1444 0031 0B       		.uleb128 0xb
+ 1445 0032 03       		.uleb128 0x3
+ 1446 0033 08       		.uleb128 0x8
+ 1447 0034 00       		.byte	0
+ 1448 0035 00       		.byte	0
+ 1449 0036 05       		.uleb128 0x5
+ 1450 0037 16       		.uleb128 0x16
+ 1451 0038 00       		.byte	0
+ 1452 0039 03       		.uleb128 0x3
+ 1453 003a 0E       		.uleb128 0xe
+ 1454 003b 3A       		.uleb128 0x3a
+ 1455 003c 0B       		.uleb128 0xb
+ 1456 003d 3B       		.uleb128 0x3b
+ 1457 003e 05       		.uleb128 0x5
+ 1458 003f 49       		.uleb128 0x49
+ 1459 0040 13       		.uleb128 0x13
+ 1460 0041 00       		.byte	0
+ 1461 0042 00       		.byte	0
+ 1462 0043 06       		.uleb128 0x6
+ 1463 0044 2E       		.uleb128 0x2e
+ 1464 0045 01       		.byte	0x1
+ 1465 0046 3F       		.uleb128 0x3f
+ 1466 0047 19       		.uleb128 0x19
+ 1467 0048 03       		.uleb128 0x3
+ 1468 0049 0E       		.uleb128 0xe
+ 1469 004a 3A       		.uleb128 0x3a
+ 1470 004b 0B       		.uleb128 0xb
+ 1471 004c 3B       		.uleb128 0x3b
+ 1472 004d 0B       		.uleb128 0xb
+ 1473 004e 27       		.uleb128 0x27
+ 1474 004f 19       		.uleb128 0x19
+ 1475 0050 11       		.uleb128 0x11
+ 1476 0051 01       		.uleb128 0x1
+ 1477 0052 12       		.uleb128 0x12
+ 1478 0053 06       		.uleb128 0x6
+ 1479 0054 40       		.uleb128 0x40
+ 1480 0055 18       		.uleb128 0x18
+ 1481 0056 9742     		.uleb128 0x2117
+ 1482 0058 19       		.uleb128 0x19
+ 1483 0059 01       		.uleb128 0x1
+ 1484 005a 13       		.uleb128 0x13
+ 1485 005b 00       		.byte	0
+ 1486 005c 00       		.byte	0
+ 1487 005d 07       		.uleb128 0x7
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 31
+
+
+ 1488 005e 898201   		.uleb128 0x4109
+ 1489 0061 01       		.byte	0x1
+ 1490 0062 11       		.uleb128 0x11
+ 1491 0063 01       		.uleb128 0x1
+ 1492 0064 31       		.uleb128 0x31
+ 1493 0065 13       		.uleb128 0x13
+ 1494 0066 01       		.uleb128 0x1
+ 1495 0067 13       		.uleb128 0x13
+ 1496 0068 00       		.byte	0
+ 1497 0069 00       		.byte	0
+ 1498 006a 08       		.uleb128 0x8
+ 1499 006b 8A8201   		.uleb128 0x410a
+ 1500 006e 00       		.byte	0
+ 1501 006f 02       		.uleb128 0x2
+ 1502 0070 18       		.uleb128 0x18
+ 1503 0071 9142     		.uleb128 0x2111
+ 1504 0073 18       		.uleb128 0x18
+ 1505 0074 00       		.byte	0
+ 1506 0075 00       		.byte	0
+ 1507 0076 09       		.uleb128 0x9
+ 1508 0077 898201   		.uleb128 0x4109
+ 1509 007a 01       		.byte	0x1
+ 1510 007b 11       		.uleb128 0x11
+ 1511 007c 01       		.uleb128 0x1
+ 1512 007d 31       		.uleb128 0x31
+ 1513 007e 13       		.uleb128 0x13
+ 1514 007f 00       		.byte	0
+ 1515 0080 00       		.byte	0
+ 1516 0081 0A       		.uleb128 0xa
+ 1517 0082 34       		.uleb128 0x34
+ 1518 0083 00       		.byte	0
+ 1519 0084 03       		.uleb128 0x3
+ 1520 0085 0E       		.uleb128 0xe
+ 1521 0086 3A       		.uleb128 0x3a
+ 1522 0087 0B       		.uleb128 0xb
+ 1523 0088 3B       		.uleb128 0x3b
+ 1524 0089 0B       		.uleb128 0xb
+ 1525 008a 49       		.uleb128 0x49
+ 1526 008b 13       		.uleb128 0x13
+ 1527 008c 02       		.uleb128 0x2
+ 1528 008d 17       		.uleb128 0x17
+ 1529 008e 00       		.byte	0
+ 1530 008f 00       		.byte	0
+ 1531 0090 0B       		.uleb128 0xb
+ 1532 0091 898201   		.uleb128 0x4109
+ 1533 0094 00       		.byte	0
+ 1534 0095 11       		.uleb128 0x11
+ 1535 0096 01       		.uleb128 0x1
+ 1536 0097 31       		.uleb128 0x31
+ 1537 0098 13       		.uleb128 0x13
+ 1538 0099 00       		.byte	0
+ 1539 009a 00       		.byte	0
+ 1540 009b 0C       		.uleb128 0xc
+ 1541 009c 2E       		.uleb128 0x2e
+ 1542 009d 01       		.byte	0x1
+ 1543 009e 3F       		.uleb128 0x3f
+ 1544 009f 19       		.uleb128 0x19
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 32
+
+
+ 1545 00a0 03       		.uleb128 0x3
+ 1546 00a1 0E       		.uleb128 0xe
+ 1547 00a2 3A       		.uleb128 0x3a
+ 1548 00a3 0B       		.uleb128 0xb
+ 1549 00a4 3B       		.uleb128 0x3b
+ 1550 00a5 0B       		.uleb128 0xb
+ 1551 00a6 49       		.uleb128 0x49
+ 1552 00a7 13       		.uleb128 0x13
+ 1553 00a8 8701     		.uleb128 0x87
+ 1554 00aa 19       		.uleb128 0x19
+ 1555 00ab 11       		.uleb128 0x11
+ 1556 00ac 01       		.uleb128 0x1
+ 1557 00ad 12       		.uleb128 0x12
+ 1558 00ae 06       		.uleb128 0x6
+ 1559 00af 40       		.uleb128 0x40
+ 1560 00b0 18       		.uleb128 0x18
+ 1561 00b1 9742     		.uleb128 0x2117
+ 1562 00b3 19       		.uleb128 0x19
+ 1563 00b4 01       		.uleb128 0x1
+ 1564 00b5 13       		.uleb128 0x13
+ 1565 00b6 00       		.byte	0
+ 1566 00b7 00       		.byte	0
+ 1567 00b8 0D       		.uleb128 0xd
+ 1568 00b9 34       		.uleb128 0x34
+ 1569 00ba 00       		.byte	0
+ 1570 00bb 03       		.uleb128 0x3
+ 1571 00bc 08       		.uleb128 0x8
+ 1572 00bd 3A       		.uleb128 0x3a
+ 1573 00be 0B       		.uleb128 0xb
+ 1574 00bf 3B       		.uleb128 0x3b
+ 1575 00c0 0B       		.uleb128 0xb
+ 1576 00c1 49       		.uleb128 0x49
+ 1577 00c2 13       		.uleb128 0x13
+ 1578 00c3 02       		.uleb128 0x2
+ 1579 00c4 17       		.uleb128 0x17
+ 1580 00c5 00       		.byte	0
+ 1581 00c6 00       		.byte	0
+ 1582 00c7 0E       		.uleb128 0xe
+ 1583 00c8 34       		.uleb128 0x34
+ 1584 00c9 00       		.byte	0
+ 1585 00ca 03       		.uleb128 0x3
+ 1586 00cb 0E       		.uleb128 0xe
+ 1587 00cc 3A       		.uleb128 0x3a
+ 1588 00cd 0B       		.uleb128 0xb
+ 1589 00ce 3B       		.uleb128 0x3b
+ 1590 00cf 0B       		.uleb128 0xb
+ 1591 00d0 49       		.uleb128 0x49
+ 1592 00d1 13       		.uleb128 0x13
+ 1593 00d2 02       		.uleb128 0x2
+ 1594 00d3 18       		.uleb128 0x18
+ 1595 00d4 00       		.byte	0
+ 1596 00d5 00       		.byte	0
+ 1597 00d6 0F       		.uleb128 0xf
+ 1598 00d7 34       		.uleb128 0x34
+ 1599 00d8 00       		.byte	0
+ 1600 00d9 03       		.uleb128 0x3
+ 1601 00da 0E       		.uleb128 0xe
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 33
+
+
+ 1602 00db 3A       		.uleb128 0x3a
+ 1603 00dc 0B       		.uleb128 0xb
+ 1604 00dd 3B       		.uleb128 0x3b
+ 1605 00de 0B       		.uleb128 0xb
+ 1606 00df 49       		.uleb128 0x49
+ 1607 00e0 13       		.uleb128 0x13
+ 1608 00e1 1C       		.uleb128 0x1c
+ 1609 00e2 05       		.uleb128 0x5
+ 1610 00e3 00       		.byte	0
+ 1611 00e4 00       		.byte	0
+ 1612 00e5 10       		.uleb128 0x10
+ 1613 00e6 01       		.uleb128 0x1
+ 1614 00e7 01       		.byte	0x1
+ 1615 00e8 49       		.uleb128 0x49
+ 1616 00e9 13       		.uleb128 0x13
+ 1617 00ea 01       		.uleb128 0x1
+ 1618 00eb 13       		.uleb128 0x13
+ 1619 00ec 00       		.byte	0
+ 1620 00ed 00       		.byte	0
+ 1621 00ee 11       		.uleb128 0x11
+ 1622 00ef 21       		.uleb128 0x21
+ 1623 00f0 00       		.byte	0
+ 1624 00f1 49       		.uleb128 0x49
+ 1625 00f2 13       		.uleb128 0x13
+ 1626 00f3 2F       		.uleb128 0x2f
+ 1627 00f4 0B       		.uleb128 0xb
+ 1628 00f5 00       		.byte	0
+ 1629 00f6 00       		.byte	0
+ 1630 00f7 12       		.uleb128 0x12
+ 1631 00f8 34       		.uleb128 0x34
+ 1632 00f9 00       		.byte	0
+ 1633 00fa 03       		.uleb128 0x3
+ 1634 00fb 0E       		.uleb128 0xe
+ 1635 00fc 3A       		.uleb128 0x3a
+ 1636 00fd 0B       		.uleb128 0xb
+ 1637 00fe 3B       		.uleb128 0x3b
+ 1638 00ff 05       		.uleb128 0x5
+ 1639 0100 49       		.uleb128 0x49
+ 1640 0101 13       		.uleb128 0x13
+ 1641 0102 3F       		.uleb128 0x3f
+ 1642 0103 19       		.uleb128 0x19
+ 1643 0104 3C       		.uleb128 0x3c
+ 1644 0105 19       		.uleb128 0x19
+ 1645 0106 00       		.byte	0
+ 1646 0107 00       		.byte	0
+ 1647 0108 13       		.uleb128 0x13
+ 1648 0109 35       		.uleb128 0x35
+ 1649 010a 00       		.byte	0
+ 1650 010b 49       		.uleb128 0x49
+ 1651 010c 13       		.uleb128 0x13
+ 1652 010d 00       		.byte	0
+ 1653 010e 00       		.byte	0
+ 1654 010f 14       		.uleb128 0x14
+ 1655 0110 34       		.uleb128 0x34
+ 1656 0111 00       		.byte	0
+ 1657 0112 03       		.uleb128 0x3
+ 1658 0113 0E       		.uleb128 0xe
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 34
+
+
+ 1659 0114 3A       		.uleb128 0x3a
+ 1660 0115 0B       		.uleb128 0xb
+ 1661 0116 3B       		.uleb128 0x3b
+ 1662 0117 0B       		.uleb128 0xb
+ 1663 0118 49       		.uleb128 0x49
+ 1664 0119 13       		.uleb128 0x13
+ 1665 011a 3F       		.uleb128 0x3f
+ 1666 011b 19       		.uleb128 0x19
+ 1667 011c 02       		.uleb128 0x2
+ 1668 011d 18       		.uleb128 0x18
+ 1669 011e 00       		.byte	0
+ 1670 011f 00       		.byte	0
+ 1671 0120 15       		.uleb128 0x15
+ 1672 0121 2E       		.uleb128 0x2e
+ 1673 0122 00       		.byte	0
+ 1674 0123 3F       		.uleb128 0x3f
+ 1675 0124 19       		.uleb128 0x19
+ 1676 0125 3C       		.uleb128 0x3c
+ 1677 0126 19       		.uleb128 0x19
+ 1678 0127 6E       		.uleb128 0x6e
+ 1679 0128 0E       		.uleb128 0xe
+ 1680 0129 03       		.uleb128 0x3
+ 1681 012a 0E       		.uleb128 0xe
+ 1682 012b 3A       		.uleb128 0x3a
+ 1683 012c 0B       		.uleb128 0xb
+ 1684 012d 3B       		.uleb128 0x3b
+ 1685 012e 0B       		.uleb128 0xb
+ 1686 012f 00       		.byte	0
+ 1687 0130 00       		.byte	0
+ 1688 0131 00       		.byte	0
+ 1689              		.section	.debug_loc,"",%progbits
+ 1690              	.Ldebug_loc0:
+ 1691              	.LLST0:
+ 1692 0000 02000000 		.4byte	.LVL2
+ 1693 0004 14000000 		.4byte	.LVL4
+ 1694 0008 0200     		.2byte	0x2
+ 1695 000a 30       		.byte	0x30
+ 1696 000b 9F       		.byte	0x9f
+ 1697 000c 14000000 		.4byte	.LVL4
+ 1698 0010 17000000 		.4byte	.LVL5-1
+ 1699 0014 0100     		.2byte	0x1
+ 1700 0016 50       		.byte	0x50
+ 1701 0017 18000000 		.4byte	.LVL5
+ 1702 001b 72000000 		.4byte	.LVL7
+ 1703 001f 0100     		.2byte	0x1
+ 1704 0021 50       		.byte	0x50
+ 1705 0022 00000000 		.4byte	0
+ 1706 0026 00000000 		.4byte	0
+ 1707              	.LLST1:
+ 1708 002a C6000000 		.4byte	.LVL25
+ 1709 002e D8000000 		.4byte	.LVL26
+ 1710 0032 0100     		.2byte	0x1
+ 1711 0034 50       		.byte	0x50
+ 1712 0035 D8000000 		.4byte	.LVL26
+ 1713 0039 DB000000 		.4byte	.LVL27-1
+ 1714 003d 0100     		.2byte	0x1
+ 1715 003f 52       		.byte	0x52
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 35
+
+
+ 1716 0040 00000000 		.4byte	0
+ 1717 0044 00000000 		.4byte	0
+ 1718              	.LLST2:
+ 1719 0048 44000000 		.4byte	.LVL21
+ 1720 004c 46000000 		.4byte	.LVL22
+ 1721 0050 0100     		.2byte	0x1
+ 1722 0052 50       		.byte	0x50
+ 1723 0053 00000000 		.4byte	0
+ 1724 0057 00000000 		.4byte	0
+ 1725              		.section	.debug_aranges,"",%progbits
+ 1726 0000 2C000000 		.4byte	0x2c
+ 1727 0004 0200     		.2byte	0x2
+ 1728 0006 00000000 		.4byte	.Ldebug_info0
+ 1729 000a 04       		.byte	0x4
+ 1730 000b 00       		.byte	0
+ 1731 000c 0000     		.2byte	0
+ 1732 000e 0000     		.2byte	0
+ 1733 0010 00000000 		.4byte	.LFB64
+ 1734 0014 38000000 		.4byte	.LFE64-.LFB64
+ 1735 0018 00000000 		.4byte	.LFB65
+ 1736 001c 7C000000 		.4byte	.LFE65-.LFB65
+ 1737 0020 00000000 		.4byte	.LFB66
+ 1738 0024 EC010000 		.4byte	.LFE66-.LFB66
+ 1739 0028 00000000 		.4byte	0
+ 1740 002c 00000000 		.4byte	0
+ 1741              		.section	.debug_ranges,"",%progbits
+ 1742              	.Ldebug_ranges0:
+ 1743 0000 00000000 		.4byte	.LFB64
+ 1744 0004 38000000 		.4byte	.LFE64
+ 1745 0008 00000000 		.4byte	.LFB65
+ 1746 000c 7C000000 		.4byte	.LFE65
+ 1747 0010 00000000 		.4byte	.LFB66
+ 1748 0014 EC010000 		.4byte	.LFE66
+ 1749 0018 00000000 		.4byte	0
+ 1750 001c 00000000 		.4byte	0
+ 1751              		.section	.debug_line,"",%progbits
+ 1752              	.Ldebug_line0:
+ 1753 0000 F8020000 		.section	.debug_str,"MS",%progbits,1
+ 1753      02006102 
+ 1753      00000201 
+ 1753      FB0E0D00 
+ 1753      01010101 
+ 1754              	.LASF23:
+ 1755 0000 5472616E 		.ascii	"TransmitBuffer\000"
+ 1755      736D6974 
+ 1755      42756666 
+ 1755      657200
+ 1756              	.LASF57:
+ 1757 000f 50574D5F 		.ascii	"PWM_4_WriteCompare\000"
+ 1757      345F5772 
+ 1757      69746543 
+ 1757      6F6D7061 
+ 1757      726500
+ 1758              	.LASF37:
+ 1759 0022 55415254 		.ascii	"UART_1_GetChar\000"
+ 1759      5F315F47 
+ 1759      65744368 
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 36
+
+
+ 1759      617200
+ 1760              	.LASF38:
+ 1761 0031 4144435F 		.ascii	"ADC_SAR_1_Start\000"
+ 1761      5341525F 
+ 1761      315F5374 
+ 1761      61727400 
+ 1762              	.LASF41:
+ 1763 0041 50574D5F 		.ascii	"PWM_1_Start\000"
+ 1763      315F5374 
+ 1763      61727400 
+ 1764              	.LASF0:
+ 1765 004d 7369676E 		.ascii	"signed char\000"
+ 1765      65642063 
+ 1765      68617200 
+ 1766              	.LASF2:
+ 1767 0059 73686F72 		.ascii	"short int\000"
+ 1767      7420696E 
+ 1767      7400
+ 1768              	.LASF19:
+ 1769 0063 53414D50 		.ascii	"SAMPLE_ISR\000"
+ 1769      4C455F49 
+ 1769      535200
+ 1770              	.LASF17:
+ 1771 006e 73697A65 		.ascii	"sizetype\000"
+ 1771      74797065 
+ 1771      00
+ 1772              	.LASF43:
+ 1773 0077 50574D5F 		.ascii	"PWM_3_Start\000"
+ 1773      335F5374 
+ 1773      61727400 
+ 1774              	.LASF62:
+ 1775 0083 6D61696E 		.ascii	"main\000"
+ 1775      00
+ 1776              	.LASF56:
+ 1777 0088 50574D5F 		.ascii	"PWM_3_WriteCompare\000"
+ 1777      335F5772 
+ 1777      69746543 
+ 1777      6F6D7061 
+ 1777      726500
+ 1778              	.LASF18:
+ 1779 009b 75696E74 		.ascii	"uint\000"
+ 1779      00
+ 1780              	.LASF61:
+ 1781 00a0 433A5C55 		.ascii	"C:\\Users\\aashi\\OneDrive\\Documents\\PSoC Creator"
+ 1781      73657273 
+ 1781      5C616173 
+ 1781      68695C4F 
+ 1781      6E654472 
+ 1782 00ce 5C454D49 		.ascii	"\\EMILA.cydsn\000"
+ 1782      4C412E63 
+ 1782      7964736E 
+ 1782      00
+ 1783              	.LASF45:
+ 1784 00db 50574D5F 		.ascii	"PWM_5_Start\000"
+ 1784      355F5374 
+ 1784      61727400 
+ 1785              	.LASF47:
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 37
+
+
+ 1786 00e7 54696D65 		.ascii	"Timer_2_Start\000"
+ 1786      725F325F 
+ 1786      53746172 
+ 1786      7400
+ 1787              	.LASF11:
+ 1788 00f5 75696E74 		.ascii	"uint8\000"
+ 1788      3800
+ 1789              	.LASF24:
+ 1790 00fb 636C656E 		.ascii	"clenchValL\000"
+ 1790      63685661 
+ 1790      6C4C00
+ 1791              	.LASF51:
+ 1792 0106 4144435F 		.ascii	"ADC_SAR_1_GetResult16\000"
+ 1792      5341525F 
+ 1792      315F4765 
+ 1792      74526573 
+ 1792      756C7431 
+ 1793              	.LASF26:
+ 1794 011c 6E657574 		.ascii	"neutralVal\000"
+ 1794      72616C56 
+ 1794      616C00
+ 1795              	.LASF39:
+ 1796 0127 55415254 		.ascii	"UART_1_Start\000"
+ 1796      5F315F53 
+ 1796      74617274 
+ 1796      00
+ 1797              	.LASF55:
+ 1798 0134 50574D5F 		.ascii	"PWM_2_WriteCompare\000"
+ 1798      325F5772 
+ 1798      69746543 
+ 1798      6F6D7061 
+ 1798      726500
+ 1799              	.LASF13:
+ 1800 0147 666C6F61 		.ascii	"float\000"
+ 1800      7400
+ 1801              	.LASF6:
+ 1802 014d 6C6F6E67 		.ascii	"long long int\000"
+ 1802      206C6F6E 
+ 1802      6720696E 
+ 1802      7400
+ 1803              	.LASF4:
+ 1804 015b 6C6F6E67 		.ascii	"long int\000"
+ 1804      20696E74 
+ 1804      00
+ 1805              	.LASF22:
+ 1806 0164 4F757470 		.ascii	"Output\000"
+ 1806      757400
+ 1807              	.LASF20:
+ 1808 016b 56455249 		.ascii	"VERIFY_ISR\000"
+ 1808      46595F49 
+ 1808      535200
+ 1809              	.LASF54:
+ 1810 0176 50574D5F 		.ascii	"PWM_1_WriteCompare\000"
+ 1810      315F5772 
+ 1810      69746543 
+ 1810      6F6D7061 
+ 1810      726500
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 38
+
+
+ 1811              	.LASF16:
+ 1812 0189 6C6F6E67 		.ascii	"long double\000"
+ 1812      20646F75 
+ 1812      626C6500 
+ 1813              	.LASF25:
+ 1814 0195 636C656E 		.ascii	"clenchValR\000"
+ 1814      63685661 
+ 1814      6C5200
+ 1815              	.LASF1:
+ 1816 01a0 756E7369 		.ascii	"unsigned char\000"
+ 1816      676E6564 
+ 1816      20636861 
+ 1816      7200
+ 1817              	.LASF30:
+ 1818 01ae 636C656E 		.ascii	"clenchGesture\000"
+ 1818      63684765 
+ 1818      73747572 
+ 1818      6500
+ 1819              	.LASF52:
+ 1820 01bc 73707269 		.ascii	"sprintf\000"
+ 1820      6E746600 
+ 1821              	.LASF29:
+ 1822 01c4 53656E64 		.ascii	"SendSingleByte\000"
+ 1822      53696E67 
+ 1822      6C654279 
+ 1822      746500
+ 1823              	.LASF46:
+ 1824 01d3 54696D65 		.ascii	"Timer_1_Start\000"
+ 1824      725F315F 
+ 1824      53746172 
+ 1824      7400
+ 1825              	.LASF7:
+ 1826 01e1 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1826      206C6F6E 
+ 1826      6720756E 
+ 1826      7369676E 
+ 1826      65642069 
+ 1827              	.LASF8:
+ 1828 01f8 756E7369 		.ascii	"unsigned int\000"
+ 1828      676E6564 
+ 1828      20696E74 
+ 1828      00
+ 1829              	.LASF42:
+ 1830 0205 50574D5F 		.ascii	"PWM_2_Start\000"
+ 1830      325F5374 
+ 1830      61727400 
+ 1831              	.LASF33:
+ 1832 0211 73696747 		.ascii	"sigGesture\000"
+ 1832      65737475 
+ 1832      726500
+ 1833              	.LASF15:
+ 1834 021c 63686172 		.ascii	"char\000"
+ 1834      00
+ 1835              	.LASF34:
+ 1836 0221 6D735F63 		.ascii	"ms_count\000"
+ 1836      6F756E74 
+ 1836      00
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 39
+
+
+ 1837              	.LASF40:
+ 1838 022a 4144435F 		.ascii	"ADC_SAR_1_StartConvert\000"
+ 1838      5341525F 
+ 1838      315F5374 
+ 1838      61727443 
+ 1838      6F6E7665 
+ 1839              	.LASF10:
+ 1840 0241 696E7433 		.ascii	"int32_t\000"
+ 1840      325F7400 
+ 1841              	.LASF50:
+ 1842 0249 4144435F 		.ascii	"ADC_SAR_1_IsEndConversion\000"
+ 1842      5341525F 
+ 1842      315F4973 
+ 1842      456E6443 
+ 1842      6F6E7665 
+ 1843              	.LASF44:
+ 1844 0263 50574D5F 		.ascii	"PWM_4_Start\000"
+ 1844      345F5374 
+ 1844      61727400 
+ 1845              	.LASF21:
+ 1846 026f 75736572 		.ascii	"userInput\000"
+ 1846      496E7075 
+ 1846      7400
+ 1847              	.LASF28:
+ 1848 0279 436F6E74 		.ascii	"ContinuouslySendData\000"
+ 1848      696E756F 
+ 1848      75736C79 
+ 1848      53656E64 
+ 1848      44617461 
+ 1849              	.LASF3:
+ 1850 028e 73686F72 		.ascii	"short unsigned int\000"
+ 1850      7420756E 
+ 1850      7369676E 
+ 1850      65642069 
+ 1850      6E7400
+ 1851              	.LASF12:
+ 1852 02a1 75696E74 		.ascii	"uint32\000"
+ 1852      333200
+ 1853              	.LASF60:
+ 1854 02a8 6D61696E 		.ascii	"main.c\000"
+ 1854      2E6300
+ 1855              	.LASF5:
+ 1856 02af 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1856      20756E73 
+ 1856      69676E65 
+ 1856      6420696E 
+ 1856      7400
+ 1857              	.LASF14:
+ 1858 02c1 646F7562 		.ascii	"double\000"
+ 1858      6C6500
+ 1859              	.LASF36:
+ 1860 02c8 55415254 		.ascii	"UART_1_PutString\000"
+ 1860      5F315F50 
+ 1860      75745374 
+ 1860      72696E67 
+ 1860      00
+ 1861              	.LASF48:
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 40
+
+
+ 1862 02d9 4953525F 		.ascii	"ISR_VERIFY_StartEx\000"
+ 1862      56455249 
+ 1862      46595F53 
+ 1862      74617274 
+ 1862      457800
+ 1863              	.LASF9:
+ 1864 02ec 5F5F696E 		.ascii	"__int32_t\000"
+ 1864      7433325F 
+ 1864      7400
+ 1865              	.LASF53:
+ 1866 02f6 55415254 		.ascii	"UART_1_GetByte\000"
+ 1866      5F315F47 
+ 1866      65744279 
+ 1866      746500
+ 1867              	.LASF49:
+ 1868 0305 4953525F 		.ascii	"ISR_SAMPLE_StartEx\000"
+ 1868      53414D50 
+ 1868      4C455F53 
+ 1868      74617274 
+ 1868      457800
+ 1869              	.LASF58:
+ 1870 0318 50574D5F 		.ascii	"PWM_5_WriteCompare\000"
+ 1870      355F5772 
+ 1870      69746543 
+ 1870      6F6D7061 
+ 1870      726500
+ 1871              	.LASF31:
+ 1872 032b 6E657574 		.ascii	"neutralGesture\000"
+ 1872      72616C47 
+ 1872      65737475 
+ 1872      726500
+ 1873              	.LASF32:
+ 1874 033a 73706964 		.ascii	"spideyGesture\000"
+ 1874      65794765 
+ 1874      73747572 
+ 1874      6500
+ 1875              	.LASF27:
+ 1876 0348 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1876      52784275 
+ 1876      66666572 
+ 1876      00
+ 1877              	.LASF59:
+ 1878 0355 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1878      43313120 
+ 1878      352E342E 
+ 1878      31203230 
+ 1878      31363036 
+ 1879 0388 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1879      20726576 
+ 1879      6973696F 
+ 1879      6E203233 
+ 1879      37373135 
+ 1880 03bb 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1880      66756E63 
+ 1880      74696F6E 
+ 1880      2D736563 
+ 1880      74696F6E 
+ARM GAS  C:\Users\aashi\AppData\Local\Temp\cceVs3mG.s 			page 41
+
+
+ 1881              	.LASF35:
+ 1882 03e3 43794465 		.ascii	"CyDelay\000"
+ 1882      6C617900 
+ 1883              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

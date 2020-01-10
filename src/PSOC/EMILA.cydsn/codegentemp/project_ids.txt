@@ -1,0 +1,16 @@
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\4.2\Devices\psoc3\AnalogDevice\PSoC35AnalogDevice.cylib\PSoC35AnalogDevice.cyprj|d805e68b-197f-409e-89ad-5fe69ca49e08
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|c49fcdf9-9b24-42ab-b025-9f0ec33052e6
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\Downloads ( 4.2).cyprj|ebd37403-2f2a-44da-93b3-f0b0ce321788
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|2ef3014c-a5fa-4e34-becf-ee45d022f32c
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|11968a62-2af7-4785-9b60-63b842b81d79
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|db3a7987-5ae2-46dd-8f13-23d88f85d5c6
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\EMILA.cydsn\timerIntr.cydsn\timerIntr.cyprj|75beb57c-8f92-4d30-bbb6-bc7a2c0d733b
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\EMILA.cydsn\ServoMotor.cydsn\ServoMotor.cyprj|3682e47a-691c-4279-aee2-820f5ae59251
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\EMILA.cydsn\EMILA.cyprj|2e6b07e3-e71f-4013-a94a-28f86b28965b
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\EMILA.cydsn\PingPong.cydsn\PingPong.cyprj|03943274-27ce-43a8-b599-c2ecf093732b
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\CE224406_PSoC4_UART_Interrupt01.cydsn\CE224406_PSoC4_UART_Interrupt01.cyprj|88786fde-0e69-4acd-94ac-cb589e559fd7
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\DMA_UART_PSoC401.cydsn\DMA_UART_PSoC401.cyprj|fd4585ba-ef24-4c63-a89b-47c21e6d745e
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\default\CyReferenceLibrary\CyReferenceLibrary.cylib\CyReferenceLibrary.cyprj|1871e069-dad3-4e1c-bbce-503b4ff8f3db
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\ADC_SAR_PrISM01.cydsn\ADC_SAR_PrISM01.cyprj|ace19f24-227a-470a-9c57-0854a2ad859b
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\ADC_DMA_VDAC01.cydsn\ADC_DMA_VDAC01.cyprj|2339ae3f-1d0b-447d-82a3-26ec35a589d2
+C:\Users\aashi\OneDrive\Documents\PSoC Creator\UART_Full_Duplex01.cydsn\UART_Full_Duplex01.cyprj|5f7d1678-fb76-41a9-bb9c-2a9a2b98fab8
