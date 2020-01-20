@@ -56,10 +56,10 @@ While this project was successful in demonstrating the fundamentals, investigati
 ## Demo 
 Below is the beta demo video of the final project. The significant time delay is NOT present when running outside of the Anaconda virtual environment.
 
-![Image of BetaDemo](https://i.imgur.com/pUDJUiz.gif)
+https://photos.google.com/share/AF1QipMtgHSae3AMFFn_HSqIvlHlRMEjb5AUE4gdvErBo0U595-0e7dV38DIKtpDdVbgsg/photo/AF1QipOZ-ikv0LpO3DevkLp8RcdabwaMfNGhdRMeSAaX?key=T1oxTWtsSHplUlBmQVlWRWFpUGl0N1I3SjBXY1B3
 
 ## Media 
-In the below link you may find videos and pictures detailing the project.
+In the below link you may find other videos and pictures detailing the project.
 
 https://photos.google.com/share/AF1QipMtgHSae3AMFFn_HSqIvlHlRMEjb5AUE4gdvErBo0U595-0e7dV38DIKtpDdVbgsg?key=T1oxTWtsSHplUlBmQVlWRWFpUGl0N1I3SjBXY1B3
 
