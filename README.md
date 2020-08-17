@@ -1,6 +1,9 @@
 # EMILA
 Electromyography Muscular Interface Limb Assist - An Investigation into Robotic Prosthetics 
 
+## Quick Summary
+http://ashazar.me/projects/emila
+
 ## Project Description
 Project EMILA is a cursory investigation into robotic prosthetics. 
 This project essentially gathers EMG data from EMG sensors and has it interpreted by a machine learning classifier to perform a previously mapped gesture. 
